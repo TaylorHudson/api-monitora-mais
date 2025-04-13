@@ -1,6 +1,5 @@
 package br.com.pj2.back.dataprovider.database.entity;
 
-import br.com.pj2.back.dataprovider.database.entity.enumerated.DaysWeek;
 import br.com.pj2.back.dataprovider.database.entity.enumerated.StatusMonitoring;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,9 +23,7 @@ import lombok.Setter;
 
 import javax.management.monitor.Monitor;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
