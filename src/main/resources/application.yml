@@ -1,1 +1,18 @@
-spring.application.name=back
+spring:
+  application:
+    name: pj2-back
+
+  datasource:
+    url: jdbc:postgresql://localhost:5454/pj2_db
+    username: pj2
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+springdoc:
+  api-docs:
+    path: /api-docs

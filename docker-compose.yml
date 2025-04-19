@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_pj2
+    environment:
+      POSTGRES_USER: pj2
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pj2_db
+    ports:
+      - "5454:5432"
