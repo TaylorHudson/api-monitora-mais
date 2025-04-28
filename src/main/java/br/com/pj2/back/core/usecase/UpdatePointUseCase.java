@@ -17,6 +17,6 @@ public class UpdatePointUseCase {
 
     public PointDomain execute(Long id, PointDomain domain) {
         //log.info("Updating a existing point. [id={}]", id);
-        return pointGateway.create(domain);
+        return pointGateway.update(id, domain);
     }
 }

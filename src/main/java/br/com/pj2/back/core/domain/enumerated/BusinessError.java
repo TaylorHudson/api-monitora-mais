@@ -2,7 +2,8 @@ package br.com.pj2.back.core.domain.enumerated;
 
 //@Getter
 public enum BusinessError {
-    VALIDATION_ERROR("100", "Verifique os detalhes do erro para entender quais campos estão inválidos.");
+    VALIDATION_ERROR("100", "Verifique os detalhes do erro para entender quais campos estão inválidos."),
+    POINT_NOT_FOUND("404", "O Ponto não foi encontrado.");
 
     private final String code;
     private final String message;
