@@ -1,1 +1,13 @@
-spring.application.name=back
+spring:
+  application:
+    name: pj2-back
+
+integration:
+  suap:
+    url: https://suap.ifpb.edu.br
+
+security:
+  jwt:
+    key: 16d13dc79eef6f791bc910f50760db5603af5c507c100ac8b21e36cdc230a701
+    access-expires-in: 900000 #15 minutes
+    refresh-expires-in: 604800000 #7 days
