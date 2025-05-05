@@ -31,7 +31,13 @@ public class AuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-       final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String path = request.getServletPath();
+        if (isPublicRoute(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (isNull(authHeader) || !authHeader.startsWith("Bearer ")) {
             log.error("Authorization header doesn't provided or is invalid.");
@@ -62,5 +68,9 @@ public class AuthFilter extends OncePerRequestFilter {
         } finally {
             filterChain.doFilter(request, response);
         }
+    }
+
+    private boolean isPublicRoute(String path) {
+        return path.startsWith("/auth/");
     }
 }

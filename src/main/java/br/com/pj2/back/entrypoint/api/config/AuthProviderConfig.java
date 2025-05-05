@@ -11,8 +11,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,14 +23,11 @@ public class AuthProviderConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userGateway.findByRegistration(username)
-                .map(user -> {
-                    var authorities = user.getRoles().stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.name())))
-                            .toList();
-                    return new User(user.getRegistration(), "", authorities);
-                })
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> {
+            var user = userGateway.findByRegistration(username);
+            var authority = new SimpleGrantedAuthority("ROLE_".concat(user.getRole().name()));
+            return new User(user.getRegistration(), "", List.of(authority));
+        };
     }
 
     @Bean

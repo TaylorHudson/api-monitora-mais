@@ -1,6 +1,16 @@
 spring:
   application:
     name: pj2-back
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5454/pj2}
+    username: ${DB_USER:user}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+      properties:
+        hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
 integration:
   suap:

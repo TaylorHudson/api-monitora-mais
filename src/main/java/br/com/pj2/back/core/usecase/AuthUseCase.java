@@ -1,6 +1,9 @@
 package br.com.pj2.back.core.usecase;
 
+import br.com.pj2.back.core.common.utils.RegexUtils;
 import br.com.pj2.back.core.domain.AuthDomain;
+import br.com.pj2.back.core.domain.UserDomain;
+import br.com.pj2.back.core.domain.enumerated.Role;
 import br.com.pj2.back.core.gateway.AuthGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.gateway.UserGateway;
@@ -16,9 +19,19 @@ public class AuthUseCase {
 
     public AuthDomain execute(String registration, String password) {
         authGateway.validateCredentials(registration, password);
-        final var user =  userGateway.findByRegistration(registration).orElseThrow();
-        String access = tokenGateway.generateAccessToken(user.getRegistration());
-        String refresh = tokenGateway.generateRefreshToken(user.getRegistration());
+
+        if (RegexUtils.isTeacherRegistration(registration)) {
+            userGateway.save(new UserDomain(registration, Role.TEACHER));
+            return generateAuthDomain(registration);
+        }
+
+        final var user =  userGateway.findByRegistrationAndRole(registration, Role.STUDENT);
+        return generateAuthDomain(user.getRegistration());
+    }
+
+    private AuthDomain generateAuthDomain(String registration) {
+        String access = tokenGateway.generateAccessToken(registration);
+        String refresh = tokenGateway.generateRefreshToken(registration);
         return new AuthDomain(access, refresh);
     }
 }
