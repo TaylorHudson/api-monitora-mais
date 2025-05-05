@@ -13,6 +13,7 @@ public enum ErrorCode {
     USER_NOT_FOUND("ERROR_201", "Usuário não encontrado."),
     // Authorization/Authentication errors - 300...399
     INVALID_TOKEN("ERROR_300", "Token de autenticação inválido, expirado ou corrompido."),
+    INVALID_CREDENTIALS("ERROR_301", "Matrícula ou senha inválida."),
     // Server errors - 900...999
     SERVER_ERROR("ERROR_999", "Não foi possível processar sua requisição.");
 

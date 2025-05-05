@@ -23,7 +23,9 @@ public class FeignLogger extends Logger {
 
         log(configKey, "Headers: %s", request.headers());
         if (hasRequestBody(request)) {
-            log(configKey, "%s", new String(request.body(), StandardCharsets.UTF_8));
+            String body = new String(request.body(), StandardCharsets.UTF_8);
+            body = sanitizeBody(body);
+            log(configKey, "%s", body);
         }
 
         log(configKey, "---> END HTTP (%s-byte body)", request.length());
@@ -54,6 +56,10 @@ public class FeignLogger extends Logger {
 
     private static String getResponseReason(Response response) {
         return response.reason() != null ? response.reason() : "";
+    }
+
+    private static String sanitizeBody(String body) {
+        return body.replaceAll("(?i)(\"password\"\\s*:\\s*\")[^\"]*(\")", "$1********$2");
     }
 
 }
