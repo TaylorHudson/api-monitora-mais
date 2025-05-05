@@ -1,9 +1,9 @@
 package br.com.pj2.back.dataprovider.adapter;
 
+import br.com.pj2.back.core.domain.enumerated.ErrorCode;
+import br.com.pj2.back.core.exception.UnauthorizedException;
 import br.com.pj2.back.core.gateway.TokenGateway;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -60,12 +60,16 @@ public class TokenAdapter implements TokenGateway {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException e) {
+            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN);
+        }
     }
 
     private Key getKey() {

@@ -1,5 +1,6 @@
 package br.com.pj2.back.entrypoint.api.config;
 
+import br.com.pj2.back.core.domain.enumerated.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/test").hasAnyRole(Role.STUDENT.name())
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

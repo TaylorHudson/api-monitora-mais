@@ -5,6 +5,7 @@ import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.exception.StandardException;
 import br.com.pj2.back.core.exception.UnauthorizedException;
 import br.com.pj2.back.entrypoint.api.dto.ErrorResponse;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -43,6 +44,13 @@ public class GlobalExceptionHandler {
     public ErrorResponse handle(UnauthorizedException exception) {
         log.error("Unauthorized Error - [{}]", exception.getErrorCode().getMessage());
         return ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), exception.getErrorCode());
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handle(JwtException exception) {
+        log.error("JWT Error - [{}]", exception.getMessage(), exception);
+        return ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), ErrorCode.INVALID_TOKEN);
     }
 
     @ExceptionHandler(Throwable.class)
