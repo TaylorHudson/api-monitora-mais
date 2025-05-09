@@ -8,7 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDomain {
+public class TeacherDomain {
     private String registration;
+    private String name;
+    private String email;
     private Role role;
+    // private Set<DisciplineDomain> disciplines = new HashSet<>();
 }

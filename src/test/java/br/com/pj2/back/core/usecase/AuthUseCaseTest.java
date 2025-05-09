@@ -3,12 +3,13 @@ package br.com.pj2.back.core.usecase;
 import static org.junit.jupiter.api.Assertions.*;
 
 import br.com.pj2.back.core.domain.AuthDomain;
-import br.com.pj2.back.core.domain.UserDomain;
+import br.com.pj2.back.core.domain.StudentDomain;
+import br.com.pj2.back.core.domain.TeacherDomain;
 import br.com.pj2.back.core.domain.enumerated.Role;
 import br.com.pj2.back.core.gateway.AuthGateway;
+import br.com.pj2.back.core.gateway.StudentGateway;
+import br.com.pj2.back.core.gateway.TeacherGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
-import br.com.pj2.back.core.gateway.UserGateway;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +23,9 @@ public class AuthUseCaseTest {
     @Mock
     private AuthGateway authGateway;
     @Mock
-    private UserGateway userGateway;
+    private TeacherGateway teacherGateway;
+    @Mock
+    private StudentGateway studentGateway;
     @Mock
     private TokenGateway tokenGateway;
     @InjectMocks
@@ -41,7 +44,8 @@ public class AuthUseCaseTest {
         AuthDomain auth = authUseCase.execute(registration, password);
 
         verify(authGateway).validateCredentials(registration, password);
-        verify(userGateway).save(any(UserDomain.class));
+        verify(teacherGateway).save(any(TeacherDomain.class));
+        verifyNoInteractions(studentGateway.save(any(StudentDomain.class)));
         assertEquals(expectedAccess, auth.getAccessToken());
         assertEquals(expectedRefresh, auth.getRefreshToken());
     }
@@ -49,18 +53,19 @@ public class AuthUseCaseTest {
     @Test
     void shouldAuthenticateExistingStudent() {
         String registration = "000000000000";
+        String name = "Student Name";
         String password = "senha";
         String expectedAccess = "access-token";
         String expectedRefresh = "refresh-token";
 
-        when(userGateway.findByRegistrationAndRole(registration, Role.STUDENT)).thenReturn(new UserDomain(registration, Role.STUDENT));
+        when(studentGateway.findByRegistrationAndRole(registration, Role.STUDENT)).thenReturn(new StudentDomain(registration, name, "", Role.STUDENT));
         when(tokenGateway.generateAccessToken(registration)).thenReturn(expectedAccess);
         when(tokenGateway.generateRefreshToken(registration)).thenReturn(expectedRefresh);
 
         AuthDomain auth = authUseCase.execute(registration, password);
 
         verify(authGateway).validateCredentials(registration, password);
-        verify(userGateway).findByRegistrationAndRole(registration, Role.STUDENT);
+        verify(studentGateway).findByRegistrationAndRole(registration, Role.STUDENT);
         assertEquals(expectedAccess, auth.getAccessToken());
         assertEquals(expectedRefresh, auth.getRefreshToken());
     }

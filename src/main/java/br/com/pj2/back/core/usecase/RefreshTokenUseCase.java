@@ -4,10 +4,8 @@ import br.com.pj2.back.core.domain.AuthDomain;
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 import br.com.pj2.back.core.exception.UnauthorizedException;
 import br.com.pj2.back.core.gateway.TokenGateway;
-import br.com.pj2.back.core.gateway.UserGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service

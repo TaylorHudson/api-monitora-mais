@@ -1,6 +1,8 @@
 package br.com.pj2.back.entrypoint.api.config;
 
-import br.com.pj2.back.core.gateway.UserGateway;
+import br.com.pj2.back.core.exception.ResourceNotFoundException;
+import br.com.pj2.back.core.gateway.StudentGateway;
+import br.com.pj2.back.core.gateway.TeacherGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +21,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthProviderConfig {
 
-    private final UserGateway userGateway;
+    private final TeacherGateway teacherGateway;
+    private final StudentGateway studentGateway;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            var user = userGateway.findByRegistration(username);
-            var authority = new SimpleGrantedAuthority("ROLE_".concat(user.getRole().name()));
-            return new User(user.getRegistration(), "", List.of(authority));
+            try {
+                var teacher = teacherGateway.findByRegistration(username);
+                var authority = new SimpleGrantedAuthority("ROLE_" + teacher.getRole().name());
+                return new User(teacher.getRegistration(), "", List.of(authority));
+            } catch (ResourceNotFoundException e) {
+                var student = studentGateway.findByRegistration(username);
+                var authority = new SimpleGrantedAuthority("ROLE_" + student.getRole().name());
+                return new User(student.getRegistration(), "", List.of(authority));
+            }
         };
     }
 

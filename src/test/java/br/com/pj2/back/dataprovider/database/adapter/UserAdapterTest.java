@@ -1,6 +1,5 @@
 package br.com.pj2.back.dataprovider.database.adapter;
 
-import br.com.pj2.back.core.domain.UserDomain;
 import br.com.pj2.back.core.domain.enumerated.Role;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.dataprovider.database.entity.UserEntity;
