@@ -45,7 +45,7 @@ public class AuthUseCaseTest {
 
         verify(authGateway).validateCredentials(registration, password);
         verify(teacherGateway).save(any(TeacherDomain.class));
-        verifyNoInteractions(studentGateway.save(any(StudentDomain.class)));
+        verifyNoInteractions(studentGateway);
         assertEquals(expectedAccess, auth.getAccessToken());
         assertEquals(expectedRefresh, auth.getRefreshToken());
     }
