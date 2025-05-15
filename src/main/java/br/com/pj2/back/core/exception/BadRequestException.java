@@ -4,13 +4,13 @@ import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 
 import java.util.List;
 
-public class UnauthorizedException extends StandardException {
+public class BadRequestException extends StandardException {
 
-    public UnauthorizedException(ErrorCode errorCode, List<FieldError> errorDetails) {
+    public BadRequestException(ErrorCode errorCode, List<FieldError> errorDetails) {
         super(errorCode, errorDetails);
     }
 
-    public UnauthorizedException(ErrorCode errorCode) {
+    public BadRequestException(ErrorCode errorCode) {
         super(errorCode);
     }
 }

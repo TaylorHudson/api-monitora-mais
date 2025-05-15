@@ -22,9 +22,11 @@ public class MonitoringSession {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "monitor_registration", referencedColumnName = "registration")
     private StudentEntity monitor;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "discipline_id", referencedColumnName = "id")
     private DisciplineEntity discipline;
 
     private LocalDateTime startTime;

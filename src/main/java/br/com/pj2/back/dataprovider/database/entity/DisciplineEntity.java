@@ -19,13 +19,14 @@ public class DisciplineEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "allow_monitors_same_time", nullable = false)
     private Boolean allowMonitorsSameTime;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "teacher_registration", referencedColumnName = "registration")
     private TeacherEntity teacher;
 
     @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL, orphanRemoval = true)

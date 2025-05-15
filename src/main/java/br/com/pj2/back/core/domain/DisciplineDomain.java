@@ -2,6 +2,7 @@ package br.com.pj2.back.core.domain;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -13,7 +14,7 @@ public class DisciplineDomain {
     private Long id;
     private String name;
     private Boolean allowMonitorsSameTime;
-    private TeacherDomain teacher;
-    private Set<MonitoringScheduleDomain> schedules;
+    private String teacher;
+    private List<MonitoringScheduleDomain> schedules;
     //private Set<MonitoringSession> sessions;
 }

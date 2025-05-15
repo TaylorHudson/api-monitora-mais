@@ -4,13 +4,13 @@ import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 
 import java.util.List;
 
-public class BadRequestException extends StandardException {
+public class ConflictException extends StandardException {
 
-    public BadRequestException(ErrorCode errorCode, List<FieldError> errorDetails) {
+    public ConflictException(ErrorCode errorCode, List<FieldError> errorDetails) {
         super(errorCode, errorDetails);
     }
 
-    public BadRequestException(ErrorCode errorCode) {
+    public ConflictException(ErrorCode errorCode) {
         super(errorCode);
     }
 }

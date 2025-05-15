@@ -1,16 +1,4 @@
 services:
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      DB_URL: jdbc:postgresql://postgres:5432/pj2
-#      DB_USER: user
-#      DB_PASSWORD: password
-#    depends_on:
-#      - postgres
   postgres:
     image: postgres:16
     container_name: postgres

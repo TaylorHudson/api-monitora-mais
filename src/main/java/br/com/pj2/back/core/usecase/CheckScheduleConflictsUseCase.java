@@ -1,39 +1,57 @@
 package br.com.pj2.back.core.usecase;
 
-import br.com.pj2.back.core.common.utils.RegexUtils;
-import br.com.pj2.back.core.domain.AuthDomain;
-import br.com.pj2.back.core.domain.TeacherDomain;
-import br.com.pj2.back.core.domain.enumerated.Role;
-import br.com.pj2.back.core.gateway.AuthGateway;
-import br.com.pj2.back.core.gateway.StudentGateway;
-import br.com.pj2.back.core.gateway.TeacherGateway;
-import br.com.pj2.back.core.gateway.TokenGateway;
+import br.com.pj2.back.core.domain.DisciplineDomain;
+import br.com.pj2.back.core.domain.enumerated.ErrorCode;
+import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
+import br.com.pj2.back.core.exception.BadRequestException;
+import br.com.pj2.back.core.exception.ConflictException;
+import br.com.pj2.back.core.gateway.*;
+import br.com.pj2.back.entrypoint.api.dto.MonitoringScheduleRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindException;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.DayOfWeek;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class AuthUseCase {
-    private final AuthGateway authGateway;
-    private final TeacherGateway teacherGateway;
-    private final StudentGateway studentGateway;
-    private final TokenGateway tokenGateway;
+public class CheckScheduleConflictsUseCase {
+    private final MonitoringScheduleGateway scheduleGateway;
+    private final DisciplineGateway disciplineGateway;
 
-    public AuthDomain execute(String registration, String password) {
-        authGateway.validateCredentials(registration, password);
+    public void execute(MonitoringScheduleRequest request) throws BindException {
+        var dayOfWeek = parseDayOfWeek(request.getDayOfWeek());
+        DisciplineDomain discipline = disciplineGateway.findByName(request.getDiscipline());
 
-        if (RegexUtils.isTeacherRegistration(registration)) {
-            teacherGateway.save(TeacherDomain.builder().registration(registration).build());
-            return generateAuthDomain(registration);
+        if (discipline.getAllowMonitorsSameTime()) {
+            return;
         }
 
-        final var student =  studentGateway.findByRegistrationAndRole(registration, Role.STUDENT);
-        return generateAuthDomain(student.getRegistration());
+        boolean conflictExists = scheduleGateway.existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(
+                discipline.getName(),
+                dayOfWeek,
+                request.getStartTime(),
+                request.getEndTime(),
+                List.of(MonitoringScheduleStatus.PENDING, MonitoringScheduleStatus.APPROVED)
+        );
+
+        if (conflictExists) {
+            throw new ConflictException(ErrorCode.MONITORING_SCHEDULE_REQUEST_CONFLICT);
+        }
     }
 
-    private AuthDomain generateAuthDomain(String registration) {
-        String access = tokenGateway.generateAccessToken(registration);
-        String refresh = tokenGateway.generateRefreshToken(registration);
-        return new AuthDomain(access, refresh);
+    private DayOfWeek parseDayOfWeek(String dayOfWeek) throws BindException {
+        try {
+            return DayOfWeek.valueOf(dayOfWeek.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            String validValues = String.join(", ", Stream.of(DayOfWeek.values())
+                    .map(Enum::name)
+                    .toList());
+            throw new BindException(dayOfWeek, "Valores válidos para o dia da semana são: " + validValues);
+        }
     }
 }

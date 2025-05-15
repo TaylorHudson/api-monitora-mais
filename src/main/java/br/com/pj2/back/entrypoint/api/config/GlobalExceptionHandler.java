@@ -1,6 +1,7 @@
 package br.com.pj2.back.entrypoint.api.config;
 
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
+import br.com.pj2.back.core.exception.ConflictException;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.exception.StandardException;
 import br.com.pj2.back.core.exception.UnauthorizedException;
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
     public ErrorResponse handle(JwtException exception) {
         log.error("JWT Error - [{}]", exception.getMessage(), exception);
         return ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), ErrorCode.INVALID_TOKEN);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handle(ConflictException exception) {
+        log.error("Conflict Error - [{}]", exception.getMessage(), exception);
+        return ErrorResponse.of(HttpStatus.CONFLICT.value(), exception.getErrorCode());
     }
 
     @ExceptionHandler(Throwable.class)

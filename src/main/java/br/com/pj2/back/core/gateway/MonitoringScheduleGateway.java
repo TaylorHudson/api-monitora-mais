@@ -1,5 +1,15 @@
 package br.com.pj2.back.core.gateway;
 
-public interface AuthGateway {
-    void validateCredentials(String registration, String password);
+import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
+import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.List;
+
+public interface MonitoringScheduleGateway {
+    List<MonitoringScheduleDomain> findByMonitorRegistrationAndDayOfWeek(String registration, DayOfWeek dayOfWeek);
+    MonitoringScheduleDomain findByIdAndMonitorRegistration(Long id, String registration);
+    MonitoringScheduleDomain create(MonitoringScheduleDomain domain);
+    boolean existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(String disciplineName, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> status);
 }

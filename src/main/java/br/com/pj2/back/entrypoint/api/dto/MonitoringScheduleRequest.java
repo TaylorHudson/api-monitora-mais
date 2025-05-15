@@ -1,6 +1,8 @@
 package br.com.pj2.back.entrypoint.api.dto;
 
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -10,18 +12,18 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MonitoringScheduleResponse {
-    private Long id;
-    private String monitor;
+public class MonitoringScheduleRequest {
+    @NotEmpty(message = "O nome da disciplina é obrigatório.")
     private String discipline;
+    @NotEmpty(message = "O dia da semana é obrigatório.")
     private String dayOfWeek;
+    @NotNull(message = "A hora de início da monitoria é obrigatória.")
     private LocalTime startTime;
+    @NotNull(message = "A hora de fim da monitoria é obrigatória.")
     private LocalTime endTime;
 
-    public static MonitoringScheduleResponse of(MonitoringScheduleDomain domain) {
-        return MonitoringScheduleResponse.builder()
-                .id(domain.getId())
-                .monitor(domain.getMonitor())
+    public static MonitoringScheduleRequest of(MonitoringScheduleDomain domain) {
+        return MonitoringScheduleRequest.builder()
                 .discipline(domain.getDiscipline())
                 .dayOfWeek(domain.getDayOfWeek().name())
                 .startTime(domain.getStartTime())

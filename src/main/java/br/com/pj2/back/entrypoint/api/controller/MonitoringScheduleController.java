@@ -1,14 +1,20 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
+import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
+import br.com.pj2.back.core.usecase.CheckScheduleConflictsUseCase;
+import br.com.pj2.back.entrypoint.api.dto.MonitoringScheduleRequest;
 import br.com.pj2.back.entrypoint.api.dto.MonitoringScheduleResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,24 +24,28 @@ import java.util.List;
 public class MonitoringScheduleController {
     private final TokenGateway tokenGateway;
     private final MonitoringScheduleGateway scheduleGateway;
+    private final CheckScheduleConflictsUseCase checkScheduleConflictsUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public List<MonitoringScheduleResponse> requestSchedule(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+    public MonitoringScheduleResponse requestSchedule(
+            @RequestBody @Valid MonitoringScheduleRequest request,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
-    ) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
-
+    ) throws BindException {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        var schedules = scheduleGateway.findByMonitorRegistrationAndDayOfWeek(registration, date.getDayOfWeek());
-
-        return schedules.stream()
-                .map(MonitoringScheduleResponse::of)
-                .toList();
+        checkScheduleConflictsUseCase.execute(request);
+        var newSchedule = scheduleGateway.create(
+                MonitoringScheduleDomain.builder()
+                        .monitor(registration)
+                        .discipline(request.getDiscipline())
+                        .dayOfWeek(DayOfWeek.valueOf(request.getDayOfWeek().toUpperCase()))
+                        .startTime(request.getStartTime())
+                        .endTime(request.getEndTime())
+                        .build()
+        );
+        return MonitoringScheduleResponse.of(newSchedule);
     }
+
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)

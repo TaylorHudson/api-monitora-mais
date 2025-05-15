@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/test").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/monitoring/schedules**").hasAnyRole(Role.STUDENT.name())
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

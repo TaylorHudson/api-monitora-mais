@@ -1,18 +1,31 @@
 package br.com.pj2.back.entrypoint.api.dto;
 
-import br.com.pj2.back.core.domain.AuthDomain;
+import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import lombok.*;
+
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginResponse {
-    private String accessToken;
-    private String refreshToken;
+public class MonitoringScheduleResponse {
+    private Long id;
+    private String monitor;
+    private String discipline;
+    private String dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-    public static LoginResponse of(AuthDomain domain) {
-        return new LoginResponse(domain.getAccessToken(), domain.getRefreshToken());
+    public static MonitoringScheduleResponse of(MonitoringScheduleDomain domain) {
+        return MonitoringScheduleResponse.builder()
+                .id(domain.getId())
+                .monitor(domain.getMonitor())
+                .discipline(domain.getDiscipline())
+                .dayOfWeek(domain.getDayOfWeek().name())
+                .startTime(domain.getStartTime())
+                .endTime(domain.getEndTime())
+                .build();
     }
 }
