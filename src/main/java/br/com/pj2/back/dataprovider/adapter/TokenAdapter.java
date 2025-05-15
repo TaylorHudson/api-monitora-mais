@@ -33,6 +33,16 @@ public class TokenAdapter implements TokenGateway {
     }
 
     @Override
+    public String extractSubjectFromAuthorization(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
+
+        String token = authHeader.substring(7);
+        return extractSubject(token);
+    }
+
+    @Override
     public boolean isTokenValid(String token, String subject) {
         return subject.equals(extractSubject(token)) && !isTokenExpired(token);
     }
