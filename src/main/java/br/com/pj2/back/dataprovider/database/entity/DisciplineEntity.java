@@ -33,5 +33,5 @@ public class DisciplineEntity {
     private Set<MonitoringScheduleEntity> schedules = new HashSet<>();
 
     @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MonitoringSession> sessions = new HashSet<>();
+    private Set<MonitoringSessionEntity> sessions = new HashSet<>();
 }
