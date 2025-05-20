@@ -1,6 +1,8 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
 import br.com.pj2.back.core.gateway.TokenGateway;
+import br.com.pj2.back.core.usecase.FinishMonitoringSessionUseCase;
+import br.com.pj2.back.core.usecase.StartMonitoringSessionUseCase;
 import br.com.pj2.back.entrypoint.api.dto.FinishMonitoringSessionRequest;
 import br.com.pj2.back.entrypoint.api.dto.StartMonitoringSessionRequest;
 import jakarta.validation.Valid;
@@ -14,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MonitoringSessionController {
     private final TokenGateway tokenGateway;
-    // private final StartMonitoringSessionUseCase startSessionUseCase;
-    // private final FinishMonitoringSessionUseCase finishSessionUseCase;
+     private final StartMonitoringSessionUseCase startSessionUseCase;
+     private final FinishMonitoringSessionUseCase finishSessionUseCase;
 
     @PostMapping("/start")
     @ResponseStatus(HttpStatus.CREATED)
@@ -24,7 +26,7 @@ public class MonitoringSessionController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        //startSessionUseCase.execute(request.getMonitoringScheduleId(), registration);
+        startSessionUseCase.execute(request.getMonitoringScheduleId(), registration);
     }
 
     @PostMapping("/finish")
@@ -34,7 +36,7 @@ public class MonitoringSessionController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        //finishSessionUseCase.execute(request.getMonitoringScheduleId(), request.getDescription(), registration);
+        finishSessionUseCase.execute(request.getMonitoringScheduleId(), request.getDescription(), registration);
     }
 
 }

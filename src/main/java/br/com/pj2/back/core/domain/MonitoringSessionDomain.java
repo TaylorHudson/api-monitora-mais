@@ -4,14 +4,14 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MonitoringSessionDomain {
-    @Setter
     private Long id;
-    @Setter
     private String monitor;
-    @Setter
     private String discipline;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
