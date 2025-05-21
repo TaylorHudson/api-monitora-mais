@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface TeacherRepository extends JpaRepository<TeacherEntity, String> {
     Optional<TeacherEntity> findByRegistration(String registration);
     Optional<TeacherEntity> findByRegistrationAndRole(String registration, Role role);
+
+    Optional<TeacherEntity> findByName(String name);
 }

@@ -35,6 +35,13 @@ public class TeacherAdapter implements TeacherGateway {
         return toDomain(entity);
     }
 
+    @Override
+    public TeacherDomain findByName(String name) {
+        return teacherRepository.findByName(name)
+                .map(TeacherAdapter::toDomain)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+    }
+
     private static TeacherDomain toDomain(TeacherEntity entity) {
         return TeacherDomain.builder()
                 .registration(entity.getRegistration())
@@ -44,7 +51,7 @@ public class TeacherAdapter implements TeacherGateway {
                 .build();
     }
 
-    private static TeacherEntity toEntity(TeacherDomain domain) {
+    public static TeacherEntity toEntity(TeacherDomain domain) {
         return TeacherEntity.builder()
                 .registration(domain.getRegistration())
                 .name(domain.getName())

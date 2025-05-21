@@ -7,4 +7,5 @@ public interface TeacherGateway {
     TeacherDomain findByRegistration(String registration);
     TeacherDomain findByRegistrationAndRole(String registration, Role role);
     TeacherDomain save(TeacherDomain domain);
+    TeacherDomain findByName(String name);
 }
