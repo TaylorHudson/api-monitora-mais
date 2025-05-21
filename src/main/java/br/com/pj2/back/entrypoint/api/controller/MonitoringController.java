@@ -1,8 +1,7 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
-import br.com.pj2.back.core.domain.MonitoringDomain;
-import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
+import br.com.pj2.back.core.usecase.MonitoringUseCase;
 import br.com.pj2.back.entrypoint.api.dto.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.MonitoringResponse;
 import jakarta.validation.Valid;
@@ -22,9 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MonitoringController {
 
-    private final TokenGateway tokenGateway;
-
-    private final MonitoringGateway monitoringGateway;
+    private final MonitoringUseCase monitoringUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,13 +29,6 @@ public class MonitoringController {
             @RequestBody @Valid MonitoringRequest request,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) throws BindException {
-        String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        MonitoringDomain domain = monitoringGateway.create(
-                MonitoringDomain.builder()
-                        .name(request.getName())
-                        .allowMonitorsSameTime(request.getAllowMonitorsSameTime())
-                        .teacher(registration)
-                        .build());
-        return MonitoringResponse.of(domain);
+        return MonitoringResponse.of(monitoringUseCase.execute(request, authorizationHeader));
     }
 }
