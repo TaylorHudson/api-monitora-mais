@@ -3,14 +3,13 @@ package br.com.pj2.back.core.domain;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DisciplineDomain {
+public class MonitoringDomain {
     private Long id;
     private String name;
     private Boolean allowMonitorsSameTime;

@@ -1,17 +1,15 @@
 package br.com.pj2.back.core.usecase;
 
-import br.com.pj2.back.core.domain.DisciplineDomain;
+import br.com.pj2.back.core.domain.MonitoringDomain;
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
-import br.com.pj2.back.core.exception.BadRequestException;
 import br.com.pj2.back.core.exception.ConflictException;
-import br.com.pj2.back.core.gateway.*;
+import br.com.pj2.back.core.gateway.MonitoringGateway;
+import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
 import br.com.pj2.back.entrypoint.api.dto.MonitoringScheduleRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -21,11 +19,11 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CheckScheduleConflictsUseCase {
     private final MonitoringScheduleGateway scheduleGateway;
-    private final DisciplineGateway disciplineGateway;
+    private final MonitoringGateway disciplineGateway;
 
     public void execute(MonitoringScheduleRequest request) throws BindException {
         var dayOfWeek = parseDayOfWeek(request.getDayOfWeek());
-        DisciplineDomain discipline = disciplineGateway.findByName(request.getDiscipline());
+        MonitoringDomain discipline = disciplineGateway.findByName(request.getMonitoring());
 
         if (discipline.getAllowMonitorsSameTime()) {
             return;

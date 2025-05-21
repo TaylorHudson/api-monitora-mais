@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "disciplines")
-public class DisciplineEntity {
+public class MonitoringEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +30,9 @@ public class DisciplineEntity {
     @JoinColumn(name = "teacher_registration", referencedColumnName = "registration")
     private TeacherEntity teacher;
 
-    @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MonitoringScheduleEntity> schedules = new HashSet<>();
 
-    @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MonitoringSessionEntity> sessions = new HashSet<>();
 }

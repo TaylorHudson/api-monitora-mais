@@ -37,7 +37,7 @@ public class MonitoringScheduleController {
         var newSchedule = scheduleGateway.create(
                 MonitoringScheduleDomain.builder()
                         .monitor(registration)
-                        .discipline(request.getDiscipline())
+                        .monitoring(request.getMonitoring())
                         .dayOfWeek(DayOfWeek.valueOf(request.getDayOfWeek().toUpperCase()))
                         .startTime(request.getStartTime())
                         .endTime(request.getEndTime())

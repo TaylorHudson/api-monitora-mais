@@ -22,7 +22,7 @@ public class MonitoringScheduleResponse {
         return MonitoringScheduleResponse.builder()
                 .id(domain.getId())
                 .monitor(domain.getMonitor())
-                .discipline(domain.getDiscipline())
+                .discipline(domain.getMonitoring())
                 .dayOfWeek(domain.getDayOfWeek().name())
                 .startTime(domain.getStartTime())
                 .endTime(domain.getEndTime())

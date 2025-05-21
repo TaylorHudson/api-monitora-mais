@@ -4,10 +4,10 @@ import br.com.pj2.back.core.domain.MonitoringSessionDomain;
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.MonitoringSessionGateway;
-import br.com.pj2.back.dataprovider.database.entity.DisciplineEntity;
+import br.com.pj2.back.dataprovider.database.entity.MonitoringEntity;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringSessionEntity;
 import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
-import br.com.pj2.back.dataprovider.database.repository.DisciplineRepository;
+import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,17 +16,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MonitoringSessionAdapter implements MonitoringSessionGateway {
     private final MonitoringSessionRepository monitoringSessionRepository;
-    private final DisciplineRepository disciplineRepository;
+    private final MonitoringRepository disciplineRepository;
 
     @Override
     public MonitoringSessionDomain save(MonitoringSessionDomain domain) {
-        var discipline = disciplineRepository.findByName(domain.getDiscipline())
+        var discipline = disciplineRepository.findByName(domain.getMonitoring())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND));
         var entity = monitoringSessionRepository.save(
                 MonitoringSessionEntity.builder()
                         .id(domain.getId())
                         .monitor(StudentEntity.builder().registration(domain.getMonitor()).build())
-                        .discipline(DisciplineEntity.builder().id(discipline.getId()).build())
+                        .monitoring(MonitoringEntity.builder().id(discipline.getId()).build())
                         .startTime(domain.getStartTime())
                         .endTime(domain.getEndTime())
                         .description(domain.getDescription())
@@ -47,7 +47,7 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
         return MonitoringSessionDomain.builder()
                 .id(entity.getId())
                 .monitor(entity.getMonitor().getRegistration())
-                .discipline(entity.getDiscipline().getName())
+                .monitoring(entity.getMonitoring().getName())
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .description(entity.getDescription())

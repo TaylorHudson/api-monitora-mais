@@ -27,8 +27,8 @@ public class MonitoringScheduleEntity {
     private StudentEntity monitor;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "discipline_id", referencedColumnName = "id")
-    private DisciplineEntity discipline;
+    @JoinColumn(name = "monitoring_id", referencedColumnName = "id")
+    private MonitoringEntity monitoring;
 
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;

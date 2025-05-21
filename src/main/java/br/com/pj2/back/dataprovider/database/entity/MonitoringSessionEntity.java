@@ -24,8 +24,8 @@ public class MonitoringSessionEntity {
     private StudentEntity monitor;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "discipline_id", referencedColumnName = "id")
-    private DisciplineEntity discipline;
+    @JoinColumn(name = "monitoring_id", referencedColumnName = "id")
+    private MonitoringEntity monitoring;
 
     private LocalDateTime startTime;
 

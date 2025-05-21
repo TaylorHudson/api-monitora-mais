@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 public class MonitoringSessionDomain {
     private Long id;
     private String monitor;
-    private String discipline;
+    private String monitoring;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String description;
     private boolean isStarted;
 
-    public MonitoringSessionDomain(String monitor, String discipline) {
+    public MonitoringSessionDomain(String monitor, String monitoring) {
         this.monitor = monitor;
-        this.discipline = discipline;
+        this.monitoring = monitoring;
     }
 
     public void startSession() {

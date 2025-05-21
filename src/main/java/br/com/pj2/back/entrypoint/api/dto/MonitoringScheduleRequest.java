@@ -13,8 +13,8 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Builder
 public class MonitoringScheduleRequest {
-    @NotEmpty(message = "O nome da disciplina é obrigatório.")
-    private String discipline;
+    @NotEmpty(message = "O nome da monitoria é obrigatório.")
+    private String monitoring;
     @NotEmpty(message = "O dia da semana é obrigatório.")
     private String dayOfWeek;
     @NotNull(message = "A hora de início da monitoria é obrigatória.")
@@ -24,7 +24,7 @@ public class MonitoringScheduleRequest {
 
     public static MonitoringScheduleRequest of(MonitoringScheduleDomain domain) {
         return MonitoringScheduleRequest.builder()
-                .discipline(domain.getDiscipline())
+                .monitoring(domain.getMonitoring())
                 .dayOfWeek(domain.getDayOfWeek().name())
                 .startTime(domain.getStartTime())
                 .endTime(domain.getEndTime())
