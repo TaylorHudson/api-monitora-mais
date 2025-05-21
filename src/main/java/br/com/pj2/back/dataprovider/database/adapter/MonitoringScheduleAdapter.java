@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     private final MonitoringScheduleRepository monitoringScheduleRepository;
-    private final MonitoringRepository disciplineRepository;
+    private final MonitoringRepository monitoringRepository;
 
     @Override
     public List<MonitoringScheduleDomain> findByMonitorRegistrationAndDayOfWeek(String registration, DayOfWeek dayOfWeek) {
@@ -42,8 +42,9 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     @Override
     @Transactional
     public MonitoringScheduleDomain create(MonitoringScheduleDomain domain) {
-        var monitoring = disciplineRepository.findByName(domain.getMonitoring())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND));;
+        var monitoring = monitoringRepository.findByName(domain.getMonitoring()).orElseThrow(
+                ()-> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND)
+        );
         var entity = monitoringScheduleRepository.save(
           MonitoringScheduleEntity.builder()
                   .monitor(StudentEntity.builder().registration(domain.getMonitor()).build())
