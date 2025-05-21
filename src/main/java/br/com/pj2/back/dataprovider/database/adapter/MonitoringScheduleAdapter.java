@@ -41,9 +41,9 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
 
     @Override
     @Transactional
-    public MonitoringScheduleDomain create(MonitoringScheduleDomain domain) {
+    public MonitoringScheduleDomain save(MonitoringScheduleDomain domain) {
         var monitoring = monitoringRepository.findByName(domain.getMonitoring()).orElseThrow(
-                ()-> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND)
+                ()-> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND)
         );
         var entity = monitoringScheduleRepository.save(
           MonitoringScheduleEntity.builder()
@@ -52,14 +52,16 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
                   .dayOfWeek(domain.getDayOfWeek())
                   .startTime(domain.getStartTime())
                   .endTime(domain.getEndTime())
+                  .status(domain.getStatus())
+                  .requestedAt(domain.getRequestedAt())
                   .build()
         );
         return toDomain(entity);
     }
 
     @Override
-    public boolean existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(String disciplineName, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> statuses) {
-        return monitoringScheduleRepository.existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(disciplineName, dayOfWeek, startTime, endTime, statuses);
+    public boolean existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(String monitoringName, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> statuses) {
+        return monitoringScheduleRepository.existsByMonitoringNameAndDayOfWeekAndTimeRangeAndStatusIn(monitoringName, dayOfWeek, startTime, endTime, statuses);
     }
 
     private MonitoringScheduleDomain toDomain(MonitoringScheduleEntity entity) {
@@ -70,6 +72,8 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
                 .dayOfWeek(entity.getDayOfWeek())
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
+                .status(entity.getStatus())
+                .requestedAt(entity.getRequestedAt())
                 .build();
     }
 }

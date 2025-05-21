@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,8 +32,8 @@ public class MonitoringEntity {
     private TeacherEntity teacher;
 
     @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MonitoringScheduleEntity> schedules = new HashSet<>();
+    private List<MonitoringScheduleEntity> schedules = List.of();
 
     @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MonitoringSessionEntity> sessions = new HashSet<>();
+    private List<MonitoringSessionEntity> sessions = List.of();
 }

@@ -7,9 +7,11 @@ import br.com.pj2.back.entrypoint.api.dto.MonitoringRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class MonitoringUseCase {
+public class CreateMonitoringUseCase {
 
     private final MonitoringGateway monitoringGateway;
     private final TokenGateway tokenGateway;
@@ -22,6 +24,8 @@ public class MonitoringUseCase {
                         .name(request.getName())
                         .allowMonitorsSameTime(request.getAllowMonitorsSameTime())
                         .teacher(registration)
+                        .schedules(List.of())
+                        .sessions(List.of())
                         .build());
     }
 }

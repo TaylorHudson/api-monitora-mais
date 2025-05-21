@@ -1,7 +1,6 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
-import br.com.pj2.back.core.gateway.TokenGateway;
-import br.com.pj2.back.core.usecase.MonitoringUseCase;
+import br.com.pj2.back.core.usecase.CreateMonitoringUseCase;
 import br.com.pj2.back.entrypoint.api.dto.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.MonitoringResponse;
 import jakarta.validation.Valid;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MonitoringController {
 
-    private final MonitoringUseCase monitoringUseCase;
+    private final CreateMonitoringUseCase createMonitoringUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -29,6 +28,6 @@ public class MonitoringController {
             @RequestBody @Valid MonitoringRequest request,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) throws BindException {
-        return MonitoringResponse.of(monitoringUseCase.execute(request, authorizationHeader));
+        return MonitoringResponse.of(createMonitoringUseCase.execute(request, authorizationHeader));
     }
 }

@@ -22,7 +22,7 @@ public interface MonitoringScheduleRepository extends JpaRepository<MonitoringSc
       AND ms.startTime < :endTime
       AND ms.endTime > :startTime
       AND ms.status IN :statuses""")
-    boolean existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(
+    boolean existsByMonitoringNameAndDayOfWeekAndTimeRangeAndStatusIn(
             @Param("monitoringName") String monitoringName,
             @Param("dayOfWeek") DayOfWeek dayOfWeek,
             @Param("startTime") LocalTime startTime,

@@ -12,7 +12,7 @@ public enum ErrorCode {
     POINT_NOT_FOUND("ERROR_200", "Ponto não encontrado."),
     USER_NOT_FOUND("ERROR_201", "Usuário não encontrado."),
     MONITORING_SCHEDULE_NOT_FOUND("ERROR_202", "Agendamento de monitoria não encontrado."),
-    DISCIPLINE_NOT_FOUND("ERROR_203", "Disciplina não encontrada."),
+    MONITORING_NOT_FOUND("ERROR_203", "Monitoria não encontrada."),
     MONITORING_SESSION_NOT_FOUND("ERROR_204", "Sessão de monitoria não encontrada."),
     // Authorization/Authentication errors - 300...399
     INVALID_TOKEN("ERROR_300", "Token de autenticação inválido, expirado ou corrompido."),

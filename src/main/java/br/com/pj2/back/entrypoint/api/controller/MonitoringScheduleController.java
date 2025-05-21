@@ -1,6 +1,7 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
+import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.CheckScheduleConflictsUseCase;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -34,13 +36,15 @@ public class MonitoringScheduleController {
     ) throws BindException {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
         checkScheduleConflictsUseCase.execute(request);
-        var newSchedule = scheduleGateway.create(
+        var newSchedule = scheduleGateway.save(
                 MonitoringScheduleDomain.builder()
                         .monitor(registration)
                         .monitoring(request.getMonitoring())
                         .dayOfWeek(DayOfWeek.valueOf(request.getDayOfWeek().toUpperCase()))
                         .startTime(request.getStartTime())
                         .endTime(request.getEndTime())
+                        .status(MonitoringScheduleStatus.PENDING)
+                        .requestedAt(LocalDateTime.now())
                         .build()
         );
         return MonitoringScheduleResponse.of(newSchedule);

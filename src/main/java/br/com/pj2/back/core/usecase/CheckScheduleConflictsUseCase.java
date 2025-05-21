@@ -19,18 +19,18 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CheckScheduleConflictsUseCase {
     private final MonitoringScheduleGateway scheduleGateway;
-    private final MonitoringGateway disciplineGateway;
+    private final MonitoringGateway monitoringGateway;
 
     public void execute(MonitoringScheduleRequest request) throws BindException {
         var dayOfWeek = parseDayOfWeek(request.getDayOfWeek());
-        MonitoringDomain discipline = disciplineGateway.findByName(request.getMonitoring());
+        MonitoringDomain monitoring = monitoringGateway.findByName(request.getMonitoring());
 
-        if (discipline.getAllowMonitorsSameTime()) {
+        if (monitoring.getAllowMonitorsSameTime()) {
             return;
         }
 
         boolean conflictExists = scheduleGateway.existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(
-                discipline.getName(),
+                monitoring.getName(),
                 dayOfWeek,
                 request.getStartTime(),
                 request.getEndTime(),

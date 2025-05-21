@@ -11,17 +11,19 @@ import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MonitoringAdapter implements MonitoringGateway {
     private final MonitoringRepository monitoringRepository;
-    protected final TeacherAdapter teacherAdapter;
+    private final TeacherAdapter teacherAdapter;
 
     @Override
     public MonitoringDomain findByName(String name) {
         return monitoringRepository.findByName(name)
                 .map(this::toDomain)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
     }
 
     @Override
