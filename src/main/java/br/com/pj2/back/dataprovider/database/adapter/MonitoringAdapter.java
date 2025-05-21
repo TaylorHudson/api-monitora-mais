@@ -14,13 +14,27 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MonitoringAdapter implements MonitoringGateway {
-    private final MonitoringRepository disciplineRepository;
+    private final MonitoringRepository monitoringRepository;
+    protected final TeacherAdapter teacherAdapter;
 
     @Override
     public MonitoringDomain findByName(String name) {
-        return disciplineRepository.findByName(name)
+        return monitoringRepository.findByName(name)
                 .map(this::toDomain)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND));
+    }
+
+    @Override
+    public MonitoringDomain create(MonitoringDomain domain) {
+        return toDomain(monitoringRepository.save(toEntity(domain)));
+    }
+
+    public MonitoringEntity toEntity(MonitoringDomain domain){
+        return MonitoringEntity.builder()
+                .name(domain.getName())
+                .teacher(TeacherAdapter.toEntity(teacherAdapter.findByRegistration(domain.getTeacher())))
+                .allowMonitorsSameTime(domain.getAllowMonitorsSameTime())
+                .build();
     }
 
     private MonitoringDomain toDomain(MonitoringEntity entity) {
