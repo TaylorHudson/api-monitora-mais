@@ -3,9 +3,7 @@ package br.com.pj2.back.dataprovider.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -13,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "disciplines")
+@Table(name = "monitoring")
 public class MonitoringEntity {
 
     @Id

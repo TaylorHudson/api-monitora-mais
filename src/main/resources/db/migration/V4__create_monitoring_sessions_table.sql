@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS monitoring_sessions (
     id SERIAL PRIMARY KEY,
     monitor_registration VARCHAR(255) NOT NULL,
-    discipline_id BIGINT NOT NULL,
+    monitoring_id BIGINT NOT NULL,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
     description TEXT,
     is_started BOOLEAN NOT NULL,
 
-    CONSTRAINT fk_monitor FOREIGN KEY (monitor_registration) REFERENCES users(registration),
-    CONSTRAINT fk_discipline FOREIGN KEY (discipline_id) REFERENCES disciplines(id)
+    CONSTRAINT monitoring_sessions_monitor_registration_fk FOREIGN KEY (monitor_registration) REFERENCES users(registration) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT monitoring_sessions_monitoring_id_fk FOREIGN KEY (monitoring_id) REFERENCES monitoring(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );

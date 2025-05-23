@@ -11,5 +11,5 @@ public interface MonitoringScheduleGateway {
     List<MonitoringScheduleDomain> findByMonitorRegistrationAndDayOfWeek(String registration, DayOfWeek dayOfWeek);
     MonitoringScheduleDomain findByIdAndMonitorRegistration(Long id, String registration);
     MonitoringScheduleDomain save(MonitoringScheduleDomain domain);
-    boolean existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(String disciplineName, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> status);
+    boolean existsByDayOfWeekAndTimeRangeAndStatusIn(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> statuses);
 }

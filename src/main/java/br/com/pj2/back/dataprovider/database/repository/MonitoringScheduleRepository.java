@@ -17,13 +17,11 @@ public interface MonitoringScheduleRepository extends JpaRepository<MonitoringSc
     @Query("""
     SELECT CASE WHEN COUNT(ms) > 0 THEN true ELSE false END
     FROM MonitoringScheduleEntity ms
-    WHERE ms.monitoring.name = :monitoringName
-      AND ms.dayOfWeek = :dayOfWeek
+    WHERE ms.dayOfWeek = :dayOfWeek
       AND ms.startTime < :endTime
       AND ms.endTime > :startTime
       AND ms.status IN :statuses""")
-    boolean existsByMonitoringNameAndDayOfWeekAndTimeRangeAndStatusIn(
-            @Param("monitoringName") String monitoringName,
+    boolean existsByDayOfWeekAndTimeRangeAndStatusIn(
             @Param("dayOfWeek") DayOfWeek dayOfWeek,
             @Param("startTime") LocalTime startTime,
             @Param("endTime") LocalTime endTime,

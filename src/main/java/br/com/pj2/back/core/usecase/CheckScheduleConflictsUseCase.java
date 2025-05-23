@@ -29,8 +29,7 @@ public class CheckScheduleConflictsUseCase {
             return;
         }
 
-        boolean conflictExists = scheduleGateway.existsByDisciplineNameAndDayOfWeekAndTimeRangeAndStatusIn(
-                monitoring.getName(),
+        boolean conflictExists = scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(
                 dayOfWeek,
                 request.getStartTime(),
                 request.getEndTime(),

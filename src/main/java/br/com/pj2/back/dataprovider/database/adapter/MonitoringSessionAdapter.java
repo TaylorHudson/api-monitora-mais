@@ -16,12 +16,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MonitoringSessionAdapter implements MonitoringSessionGateway {
     private final MonitoringSessionRepository monitoringSessionRepository;
-    private final MonitoringRepository disciplineRepository;
+    private final MonitoringRepository monitoringRepository;
 
     @Override
     public MonitoringSessionDomain save(MonitoringSessionDomain domain) {
-        var discipline = disciplineRepository.findByName(domain.getMonitoring())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.DISCIPLINE_NOT_FOUND));
+        var discipline = monitoringRepository.findByName(domain.getMonitoring())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
         var entity = monitoringSessionRepository.save(
                 MonitoringSessionEntity.builder()
                         .id(domain.getId())
