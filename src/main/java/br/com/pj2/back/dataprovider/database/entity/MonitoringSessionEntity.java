@@ -27,6 +27,10 @@ public class MonitoringSessionEntity {
     @JoinColumn(name = "monitoring_id", referencedColumnName = "id")
     private MonitoringEntity monitoring;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "monitoring_schedule_id", referencedColumnName = "id")
+    private MonitoringScheduleEntity monitoringSchedule;
+
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;

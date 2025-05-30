@@ -3,7 +3,7 @@ package br.com.pj2.back.core.usecase;
 import br.com.pj2.back.core.domain.MonitoringDomain;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
-import br.com.pj2.back.entrypoint.api.dto.MonitoringRequest;
+import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

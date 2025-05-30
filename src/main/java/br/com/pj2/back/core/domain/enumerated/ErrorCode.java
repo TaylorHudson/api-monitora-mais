@@ -14,6 +14,7 @@ public enum ErrorCode {
     MONITORING_SCHEDULE_NOT_FOUND("ERROR_202", "Agendamento de monitoria não encontrado."),
     MONITORING_NOT_FOUND("ERROR_203", "Monitoria não encontrada."),
     MONITORING_SESSION_NOT_FOUND("ERROR_204", "Sessão de monitoria não encontrada."),
+    NO_STARTED_MONITORING_SESSION_WAS_FOUND("ERROR_205", "Nenhuma sessão de monitoria iniciada foi encontrada."),
     // Authorization/Authentication errors - 300...399
     INVALID_TOKEN("ERROR_300", "Token de autenticação inválido, expirado ou corrompido."),
     INVALID_CREDENTIALS("ERROR_301", "Matrícula ou senha inválida."),

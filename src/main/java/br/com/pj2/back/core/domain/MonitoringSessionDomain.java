@@ -13,14 +13,16 @@ public class MonitoringSessionDomain {
     private Long id;
     private String monitor;
     private String monitoring;
+    private Long monitoringSchedule;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String description;
     private boolean isStarted;
 
-    public MonitoringSessionDomain(String monitor, String monitoring) {
+    public MonitoringSessionDomain(String monitor, String monitoring, Long monitoringSchedule) {
         this.monitor = monitor;
         this.monitoring = monitoring;
+        this.monitoringSchedule = monitoringSchedule;
     }
 
     public void startSession() {

@@ -1,10 +1,12 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
 import br.com.pj2.back.core.gateway.TokenGateway;
+import br.com.pj2.back.core.usecase.FindStartedMonitoringSessionUseCase;
 import br.com.pj2.back.core.usecase.FinishMonitoringSessionUseCase;
 import br.com.pj2.back.core.usecase.StartMonitoringSessionUseCase;
-import br.com.pj2.back.entrypoint.api.dto.FinishMonitoringSessionRequest;
-import br.com.pj2.back.entrypoint.api.dto.StartMonitoringSessionRequest;
+import br.com.pj2.back.entrypoint.api.dto.request.FinishMonitoringSessionRequest;
+import br.com.pj2.back.entrypoint.api.dto.request.StartMonitoringSessionRequest;
+import br.com.pj2.back.entrypoint.api.dto.response.MonitoringSessionStartedResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,9 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/monitoring/sessions")
 @RequiredArgsConstructor
 public class MonitoringSessionController {
-    private final TokenGateway tokenGateway;
+     private final TokenGateway tokenGateway;
      private final StartMonitoringSessionUseCase startSessionUseCase;
      private final FinishMonitoringSessionUseCase finishSessionUseCase;
+     private final FindStartedMonitoringSessionUseCase findStartedMonitoringSessionUseCase;
+
+    @GetMapping("/started")
+    @ResponseStatus(HttpStatus.OK)
+    public MonitoringSessionStartedResponse findStartedSession(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
+        String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
+        return findStartedMonitoringSessionUseCase.execute(registration);
+    }
 
     @PostMapping("/start")
     @ResponseStatus(HttpStatus.CREATED)
