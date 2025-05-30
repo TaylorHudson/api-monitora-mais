@@ -9,6 +9,7 @@ import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
 import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringScheduleRepository;
+import br.com.pj2.back.dataprovider.database.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     private final MonitoringScheduleRepository monitoringScheduleRepository;
     private final MonitoringRepository monitoringRepository;
+    private final StudentRepository studentRepository;
 
     @Override
     public List<MonitoringScheduleDomain> findByMonitorRegistrationAndDayOfWeek(String registration, DayOfWeek dayOfWeek) {
@@ -45,9 +47,18 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
         var monitoring = monitoringRepository.findByName(domain.getMonitoring()).orElseThrow(
                 ()-> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND)
         );
+
+        var student = studentRepository.findById(domain.getMonitor())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        if (!monitoring.getStudents().contains(student)) {
+            monitoring.getStudents().add(student);
+            monitoringRepository.save(monitoring);
+        }
+
         var entity = monitoringScheduleRepository.save(
           MonitoringScheduleEntity.builder()
-                  .monitor(StudentEntity.builder().registration(domain.getMonitor()).build())
+                  .monitor(student)
                   .monitoring(monitoring)
                   .dayOfWeek(domain.getDayOfWeek())
                   .startTime(domain.getStartTime())

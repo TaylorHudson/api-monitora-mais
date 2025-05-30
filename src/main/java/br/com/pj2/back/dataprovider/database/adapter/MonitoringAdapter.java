@@ -7,6 +7,7 @@ import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringEntity;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
+import br.com.pj2.back.dataprovider.database.entity.UserEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,14 @@ public class MonitoringAdapter implements MonitoringGateway {
         return toDomain(monitoringRepository.save(toEntity(domain)));
     }
 
+    @Override
+    public List<MonitoringDomain> findAllByStudentRegistration(String registration) {
+        return monitoringRepository.findAllByStudentRegistration(registration)
+                .stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
     public MonitoringEntity toEntity(MonitoringDomain domain){
         return MonitoringEntity.builder()
                 .name(domain.getName())
@@ -45,6 +54,7 @@ public class MonitoringAdapter implements MonitoringGateway {
                 .name(entity.getName())
                 .allowMonitorsSameTime(entity.getAllowMonitorsSameTime())
                 .teacher(entity.getTeacher().getRegistration())
+                .students(entity.getStudents().stream().map(UserEntity::getRegistration).toList())
                 .schedules(entity.getSchedules().stream().map(this::toScheduleDomain).toList())
                 .build();
     }

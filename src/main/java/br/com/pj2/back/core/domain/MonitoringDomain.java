@@ -14,6 +14,7 @@ public class MonitoringDomain {
     private String name;
     private Boolean allowMonitorsSameTime;
     private String teacher;
+    private List<String> students;
     private List<MonitoringScheduleDomain> schedules;
     private List<MonitoringSessionDomain> sessions;
 }
