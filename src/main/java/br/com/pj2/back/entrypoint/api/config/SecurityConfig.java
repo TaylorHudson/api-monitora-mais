@@ -35,6 +35,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/monitoring/schedules**").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/monitoring/sessions**").hasAnyRole(Role.STUDENT.name())
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

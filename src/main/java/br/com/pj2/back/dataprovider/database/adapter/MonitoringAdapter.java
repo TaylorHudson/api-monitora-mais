@@ -42,6 +42,7 @@ public class MonitoringAdapter implements MonitoringGateway {
 
     public MonitoringEntity toEntity(MonitoringDomain domain){
         return MonitoringEntity.builder()
+                .id(domain.getId())
                 .name(domain.getName())
                 .teacher(TeacherAdapter.toEntity(teacherAdapter.findByRegistration(domain.getTeacher())))
                 .allowMonitorsSameTime(domain.getAllowMonitorsSameTime())

@@ -4,7 +4,9 @@ import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.CreateMonitoringUseCase;
+import br.com.pj2.back.core.usecase.SubscribeStudentUseCase;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
+import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
 import br.com.pj2.back.entrypoint.api.dto.response.MonitoringResponse;
 import br.com.pj2.back.entrypoint.api.dto.response.MyMonitoringResponse;
 import jakarta.validation.Valid;
@@ -22,6 +24,7 @@ import java.util.List;
 public class MonitoringController {
 
     private final CreateMonitoringUseCase createMonitoringUseCase;
+    private final SubscribeStudentUseCase subscribeStudentUseCase;
     private final MonitoringGateway monitoringGateway;
     private final TokenGateway tokenGateway;
 
@@ -32,6 +35,15 @@ public class MonitoringController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) throws BindException {
         return MonitoringResponse.of(createMonitoringUseCase.execute(request, authorizationHeader));
+    }
+
+    @PostMapping("/students")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void subscribeStudent(
+            @RequestBody @Valid SubscribeStudentRequest request,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
+        subscribeStudentUseCase.execute(request, authorizationHeader);
     }
 
     @GetMapping("/me")

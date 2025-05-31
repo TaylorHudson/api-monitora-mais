@@ -54,6 +54,7 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
         if (!monitoring.getStudents().contains(student)) {
             monitoring.getStudents().add(student);
             monitoringRepository.save(monitoring);
+            // lançar exceção pois um estudante não pode ser monitor de uma monitoria que não está inscrito
         }
 
         var entity = monitoringScheduleRepository.save(

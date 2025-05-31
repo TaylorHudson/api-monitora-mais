@@ -8,6 +8,9 @@ import lombok.Getter;
 public enum ErrorCode {
     // Validation errors - 100...199
     VALIDATION_ERROR("ERROR_100", "Verifique os detalhes do erro para entender quais campos estão inválidos."),
+    TEACHER_IS_NOT_THE_TUTORING_TEACHER("ERROR_101", "O professor informado não é o professor da monitoria."),
+    STUDENT_ALREADY_SUBSCRIBED("ERROR_102", "O estudante já está inscrito na monitoria."),
+    INVALID_STUDENT_REGISTRATION("ERROR_103", "A matrícula do estudante é inválida ou não foi encontrada no Suap."),
     // Resource not found errors - 200...299
     POINT_NOT_FOUND("ERROR_200", "Ponto não encontrado."),
     USER_NOT_FOUND("ERROR_201", "Usuário não encontrado."),
