@@ -9,7 +9,6 @@ import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.StudentGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

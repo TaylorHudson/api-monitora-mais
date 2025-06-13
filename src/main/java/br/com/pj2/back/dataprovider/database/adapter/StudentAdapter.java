@@ -1,16 +1,12 @@
 package br.com.pj2.back.dataprovider.database.adapter;
 
 import br.com.pj2.back.core.domain.StudentDomain;
-import br.com.pj2.back.core.domain.TeacherDomain;
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 import br.com.pj2.back.core.domain.enumerated.Role;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.StudentGateway;
-import br.com.pj2.back.core.gateway.TeacherGateway;
 import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
-import br.com.pj2.back.dataprovider.database.entity.TeacherEntity;
 import br.com.pj2.back.dataprovider.database.repository.StudentRepository;
-import br.com.pj2.back.dataprovider.database.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
