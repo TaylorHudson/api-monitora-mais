@@ -48,7 +48,7 @@ public class StudentAdapter implements StudentGateway {
                 .build();
     }
 
-    private static StudentEntity toEntity(StudentDomain domain) {
+    public static StudentEntity toEntity(StudentDomain domain) {
         return StudentEntity.builder()
                 .registration(domain.getRegistration())
                 .name(domain.getName())
