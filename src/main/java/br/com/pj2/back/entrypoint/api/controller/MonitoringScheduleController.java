@@ -4,9 +4,15 @@ import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
+import br.com.pj2.back.core.usecase.ApproveMonitoringScheduleUseCase;
 import br.com.pj2.back.core.usecase.CheckScheduleConflictsUseCase;
+import br.com.pj2.back.core.usecase.DenyMonitoringScheduleUseCase;
+import br.com.pj2.back.core.usecase.FindPendingSchedulesUseCase;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringScheduleRequest;
 import br.com.pj2.back.entrypoint.api.dto.response.MonitoringScheduleResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,14 +26,51 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(name = "Agendamento de Monitoria", description = "Gerenciamento de agendamentos de monitoria")
 @RestController
 @RequestMapping("/monitoring/schedules")
 @RequiredArgsConstructor
 public class MonitoringScheduleController {
+    private final FindPendingSchedulesUseCase findPendingSchedulesUseCase;
+    private final ApproveMonitoringScheduleUseCase approveMonitoringScheduleUseCase;
+    private final DenyMonitoringScheduleUseCase denyMonitoringScheduleUseCase;
     private final TokenGateway tokenGateway;
     private final MonitoringScheduleGateway scheduleGateway;
     private final CheckScheduleConflictsUseCase checkScheduleConflictsUseCase;
 
+    @Operation(summary = "Aprovar agendamento de monitoria")
+    @PatchMapping("/{id}/approve")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void approveSchedule(
+            @PathVariable Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
+        approveMonitoringScheduleUseCase.execute(authorizationHeader, id);
+    }
+
+    @Operation(summary = "Negar agendamento de monitoria")
+    @PatchMapping("/{id}/deny")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void denySchedule(
+            @PathVariable Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
+        denyMonitoringScheduleUseCase.execute(authorizationHeader, id);
+    }
+
+    @Operation(summary = "Buscar agendamentos de monitoria pendentes de minha aprovação")
+    @GetMapping("/pending/me")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MonitoringScheduleResponse> findPendingSchedules(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
+        var schedules = findPendingSchedulesUseCase.execute(authorizationHeader);
+        return schedules.stream()
+                .map(MonitoringScheduleResponse::of)
+                .toList();
+    }
+
+    @Operation(summary = "Solicitar agendamento de monitoria")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MonitoringScheduleResponse requestSchedule(
@@ -50,7 +93,7 @@ public class MonitoringScheduleController {
         return MonitoringScheduleResponse.of(newSchedule);
     }
 
-
+    @Operation(summary = "Buscar meus agendamentos de monitoria")
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public List<MonitoringScheduleResponse> mySchedulesByDate(
@@ -69,6 +112,7 @@ public class MonitoringScheduleController {
                 .toList();
     }
 
+    @Operation(summary = "Buscar agendamento de monitoria por ID")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MonitoringScheduleResponse findScheduleById(

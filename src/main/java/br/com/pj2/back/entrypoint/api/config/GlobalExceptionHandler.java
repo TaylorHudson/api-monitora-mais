@@ -51,6 +51,13 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), exception.getErrorCode());
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handle(ForbiddenException exception) {
+        log.error("Forbidden Error - [{}]", exception.getErrorCode().getMessage());
+        return ErrorResponse.of(HttpStatus.FORBIDDEN.value(), exception.getErrorCode());
+    }
+
     @ExceptionHandler(JwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handle(JwtException exception) {

@@ -26,6 +26,8 @@ public enum ErrorCode {
     MONITORING_SESSION_ALREADY_STARTED("ERROR_401", "A sessão de monitoria já foi iniciada."),
     MONITORING_SESSION_CANNOT_BE_STARTED("ERROR_402", "A sessão de monitoria só pode ser iniciada no horário agendado ou em até 5 minutos depois."),
     MONITORING_SESSION_CANNOT_BE_FINISHED("ERROR_403", "A sessão de monitoria não foi iniciada, então não pode ser finalizada."),
+    // Forbidden errors - 500...599
+    DO_NOT_HAVE_PERMISSION_TO_APPROVE("ERROR_500", "Você não tem permissão para aprovar o agendamento de monitoria."),
     // Server errors - 900...999
     SERVER_ERROR("ERROR_999", "Não foi possível processar sua requisição.");
 

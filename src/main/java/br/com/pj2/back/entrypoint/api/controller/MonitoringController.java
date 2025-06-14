@@ -9,6 +9,8 @@ import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
 import br.com.pj2.back.entrypoint.api.dto.response.MonitoringResponse;
 import br.com.pj2.back.entrypoint.api.dto.response.MyMonitoringResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Monitoria", description = "Gerenciamento de monitorias")
 @RestController
 @RequestMapping("/monitoring")
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class MonitoringController {
     private final MonitoringGateway monitoringGateway;
     private final TokenGateway tokenGateway;
 
+    @Operation(summary = "Criar uma nova monitoria")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MonitoringResponse create(
@@ -37,6 +41,7 @@ public class MonitoringController {
         return MonitoringResponse.of(createMonitoringUseCase.execute(request, authorizationHeader));
     }
 
+    @Operation(summary = "Inscrever um aluno em uma monitoria")
     @PostMapping("/students")
     @ResponseStatus(HttpStatus.CREATED)
     public void subscribeStudent(
@@ -46,9 +51,12 @@ public class MonitoringController {
         subscribeStudentUseCase.execute(request, authorizationHeader);
     }
 
+    @Operation(summary = "Buscar minhas monitorias")
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public List<MyMonitoringResponse> myMonitoring(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public List<MyMonitoringResponse> myMonitoring(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
         return monitoringGateway.findAllByStudentRegistration(registration).stream()
                 .map(monitoring -> MyMonitoringResponse.builder()

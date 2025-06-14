@@ -6,7 +6,6 @@ import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
-import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringScheduleRepository;
 import br.com.pj2.back.dataprovider.database.repository.StudentRepository;
@@ -26,6 +25,14 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     private final StudentRepository studentRepository;
 
     @Override
+    public List<MonitoringScheduleDomain> findByTeacherRegistrationAndStatus(String registration, MonitoringScheduleStatus status) {
+        var entities = monitoringScheduleRepository.findByTeacherRegistrationAndStatus(registration, status.name());
+        return entities.stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
+    @Override
     public List<MonitoringScheduleDomain> findByMonitorRegistrationAndDayOfWeek(String registration, DayOfWeek dayOfWeek) {
         var entities = monitoringScheduleRepository.findByMonitorRegistrationAndDayOfWeekAndStatus(registration, dayOfWeek, MonitoringScheduleStatus.APPROVED);
         return entities.stream()
@@ -37,6 +44,13 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     public MonitoringScheduleDomain findByIdAndMonitorRegistration(Long id, String registration) {
         var entity = monitoringScheduleRepository.findByIdAndMonitorRegistrationAndStatus(id, registration, MonitoringScheduleStatus.APPROVED);
         return entity
+                .map(this::toDomain)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_SCHEDULE_NOT_FOUND));
+    }
+
+    @Override
+    public MonitoringScheduleDomain findById(Long id) {
+        return monitoringScheduleRepository.findById(id)
                 .map(this::toDomain)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_SCHEDULE_NOT_FOUND));
     }
@@ -59,6 +73,7 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
 
         var entity = monitoringScheduleRepository.save(
           MonitoringScheduleEntity.builder()
+                  .id(domain.getId())
                   .monitor(student)
                   .monitoring(monitoring)
                   .dayOfWeek(domain.getDayOfWeek())

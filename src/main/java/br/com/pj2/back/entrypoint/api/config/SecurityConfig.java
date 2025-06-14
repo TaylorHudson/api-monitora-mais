@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs.yaml").permitAll()
                                 .requestMatchers("/monitoring/schedules**").hasAnyRole(Role.STUDENT.name())
                                 .requestMatchers("/monitoring/sessions**").hasAnyRole(Role.STUDENT.name())
                                 .anyRequest().authenticated()
