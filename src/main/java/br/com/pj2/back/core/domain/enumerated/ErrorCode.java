@@ -11,6 +11,7 @@ public enum ErrorCode {
     TEACHER_IS_NOT_THE_TUTORING_TEACHER("ERROR_101", "O professor informado não é o professor da monitoria."),
     STUDENT_ALREADY_SUBSCRIBED("ERROR_102", "O estudante já está inscrito na monitoria."),
     INVALID_STUDENT_REGISTRATION("ERROR_103", "A matrícula do estudante é inválida ou não foi encontrada no Suap."),
+    INVALID_ENUM_NAME("ERROR_104", "O nome do enum informado é inválido."),
     // Resource not found errors - 200...299
     POINT_NOT_FOUND("ERROR_200", "Ponto não encontrado."),
     USER_NOT_FOUND("ERROR_201", "Usuário não encontrado."),

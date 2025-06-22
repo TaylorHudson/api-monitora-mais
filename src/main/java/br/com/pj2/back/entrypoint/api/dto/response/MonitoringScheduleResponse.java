@@ -1,6 +1,7 @@
 package br.com.pj2.back.entrypoint.api.dto.response;
 
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
+import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ public class MonitoringScheduleResponse {
     private String dayOfWeek;
     private LocalTime startTime;
     private LocalTime endTime;
+    private String status;
 
     public static MonitoringScheduleResponse of(MonitoringScheduleDomain domain) {
         return MonitoringScheduleResponse.builder()
@@ -26,6 +28,7 @@ public class MonitoringScheduleResponse {
                 .dayOfWeek(domain.getDayOfWeek().name())
                 .startTime(domain.getStartTime())
                 .endTime(domain.getEndTime())
+                .status(domain.getStatus().name())
                 .build();
     }
 }

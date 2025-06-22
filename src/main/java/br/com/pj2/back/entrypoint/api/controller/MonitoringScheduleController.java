@@ -7,11 +7,12 @@ import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.ApproveMonitoringScheduleUseCase;
 import br.com.pj2.back.core.usecase.CheckScheduleConflictsUseCase;
 import br.com.pj2.back.core.usecase.DenyMonitoringScheduleUseCase;
-import br.com.pj2.back.core.usecase.FindPendingSchedulesUseCase;
+import br.com.pj2.back.core.usecase.FindSchedulesByFilterUseCase;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringScheduleRequest;
 import br.com.pj2.back.entrypoint.api.dto.response.MonitoringScheduleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ import java.util.List;
 @RequestMapping("/monitoring/schedules")
 @RequiredArgsConstructor
 public class MonitoringScheduleController {
-    private final FindPendingSchedulesUseCase findPendingSchedulesUseCase;
+    private final FindSchedulesByFilterUseCase findSchedulesByFilterUseCase;
     private final ApproveMonitoringScheduleUseCase approveMonitoringScheduleUseCase;
     private final DenyMonitoringScheduleUseCase denyMonitoringScheduleUseCase;
     private final TokenGateway tokenGateway;
@@ -58,13 +59,19 @@ public class MonitoringScheduleController {
         denyMonitoringScheduleUseCase.execute(authorizationHeader, id);
     }
 
-    @Operation(summary = "Buscar agendamentos de monitoria pendentes de minha aprovação")
-    @GetMapping("/pending/me")
+    @Operation(summary = "Buscar agendamentos de monitoria por status")
+    @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public List<MonitoringScheduleResponse> findPendingSchedules(
+    public List<MonitoringScheduleResponse> findSchedulesByFilter(
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    description = "Status do agendamento. Valores válidos: PENDING, APPROVED, DENIED.",
+                    example = "APPROVED"
+            )
+            @RequestParam(required = false, defaultValue = "PENDING") String status,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
-        var schedules = findPendingSchedulesUseCase.execute(authorizationHeader);
+        var schedules = findSchedulesByFilterUseCase.execute(status, authorizationHeader);
         return schedules.stream()
                 .map(MonitoringScheduleResponse::of)
                 .toList();

@@ -11,12 +11,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FindPendingSchedulesUseCase {
+public class FindSchedulesByFilterUseCase {
     private final TokenGateway tokenGateway;
     private final MonitoringScheduleGateway monitoringScheduleGateway;
 
-    public List<MonitoringScheduleDomain> execute(String authorizationHeader) {
+    public List<MonitoringScheduleDomain> execute(String status, String authorizationHeader) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        return monitoringScheduleGateway.findByTeacherRegistrationAndStatus(registration, MonitoringScheduleStatus.PENDING);
+        return monitoringScheduleGateway.findByTeacherRegistrationAndStatus(registration, MonitoringScheduleStatus.fromString(status));
     }
 }
