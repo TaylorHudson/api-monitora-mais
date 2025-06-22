@@ -1,7 +1,6 @@
 package br.com.pj2.back.entrypoint.api.dto.response;
 
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
-import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import lombok.*;
 
 import java.time.LocalTime;
