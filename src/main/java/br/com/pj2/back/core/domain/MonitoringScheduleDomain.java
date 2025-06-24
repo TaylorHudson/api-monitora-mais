@@ -21,4 +21,12 @@ public class MonitoringScheduleDomain {
     private LocalTime endTime;
     private MonitoringScheduleStatus status;
     private LocalDateTime requestedAt;
+
+    public void approve() {
+        this.status = MonitoringScheduleStatus.APPROVED;
+    }
+
+    public void deny() {
+        this.status = MonitoringScheduleStatus.DENIED;
+    }
 }

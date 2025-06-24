@@ -1,4 +1,4 @@
-package br.com.pj2.back.entrypoint.api.dto;
+package br.com.pj2.back.entrypoint.api.dto.response;
 
 import br.com.pj2.back.core.domain.MonitoringDomain;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;

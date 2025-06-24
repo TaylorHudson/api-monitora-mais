@@ -24,7 +24,7 @@ public class StartMonitoringSessionUseCase {
         checkIfSessionAlreadyStarted(schedule.getMonitor());
         validateSessionStartTime(schedule);
 
-        var session = new MonitoringSessionDomain(schedule.getMonitor(), schedule.getMonitoring());
+        var session = new MonitoringSessionDomain(schedule.getMonitor(), schedule.getMonitoring(), monitoringScheduleId);
         session.startSession();
         sessionGateway.save(session);
     }

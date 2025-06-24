@@ -70,6 +70,6 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicRoute(String path) {
-        return path.startsWith("/auth/");
+        return path.startsWith("/auth/") || path.startsWith("/swagger-ui/") || path.startsWith("/v3/api-docs/");
     }
 }

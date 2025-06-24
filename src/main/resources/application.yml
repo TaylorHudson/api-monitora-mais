@@ -18,6 +18,8 @@ spring:
 integration:
   suap:
     url: https://suap.ifpb.edu.br
+    credential: iVt4M9whY81eSaPt/DQbyynK9eyIy3ejr4AR5VtfoW0=
+    key: zYxWvUtsRqPoNmkL
 
 security:
   jwt:

@@ -29,9 +29,17 @@ public class MonitoringEntity {
     @JoinColumn(name = "teacher_registration", referencedColumnName = "registration")
     private TeacherEntity teacher;
 
-    @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MonitoringScheduleEntity> schedules = List.of();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "monitoring_students",
+            joinColumns = @JoinColumn(referencedColumnName = "id", name = "monitoring_id"),
+            inverseJoinColumns = @JoinColumn(referencedColumnName = "registration", name = "student_registration")
+    )
+    private List<StudentEntity> students;
 
-    @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MonitoringSessionEntity> sessions = List.of();
+    @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<MonitoringScheduleEntity> schedules;
+
+    @OneToMany(mappedBy = "monitoring", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<MonitoringSessionEntity> sessions;
 }

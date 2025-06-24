@@ -7,6 +7,7 @@ import java.util.List;
 public interface MonitoringGateway {
     MonitoringDomain findByName(String name);
     MonitoringDomain create(MonitoringDomain domain);
+    List<MonitoringDomain> findAllByStudentRegistration(String registration);
     List<MonitoringDomain> findAll(String registration);
     void deleteById(Long id, String registration);
     MonitoringDomain update(Long id, MonitoringDomain domain, String registration);

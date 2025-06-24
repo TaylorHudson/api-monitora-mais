@@ -6,7 +6,7 @@ import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.exception.ConflictException;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
-import br.com.pj2.back.entrypoint.api.dto.MonitoringScheduleRequest;
+import br.com.pj2.back.entrypoint.api.dto.request.MonitoringScheduleRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;

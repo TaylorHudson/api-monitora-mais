@@ -1,4 +1,4 @@
-package br.com.pj2.back.entrypoint.api.dto;
+package br.com.pj2.back.entrypoint.api.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;

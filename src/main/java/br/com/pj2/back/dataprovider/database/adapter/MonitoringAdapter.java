@@ -7,10 +7,13 @@ import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringEntity;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
+import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
+import br.com.pj2.back.dataprovider.database.entity.UserEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -18,6 +21,7 @@ import java.util.List;
 public class MonitoringAdapter implements MonitoringGateway {
     private final MonitoringRepository monitoringRepository;
     private final TeacherAdapter teacherAdapter;
+    private final StudentAdapter studentAdapter;
 
     @Override
     public MonitoringDomain findByName(String name) {
@@ -29,6 +33,14 @@ public class MonitoringAdapter implements MonitoringGateway {
     @Override
     public MonitoringDomain create(MonitoringDomain domain) {
         return toDomain(monitoringRepository.save(toEntity(domain)));
+    }
+
+    @Override
+    public List<MonitoringDomain> findAllByStudentRegistration(String registration) {
+        return monitoringRepository.findAllByStudentRegistration(registration)
+                .stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override
@@ -68,10 +80,19 @@ public class MonitoringAdapter implements MonitoringGateway {
 
 
     public MonitoringEntity toEntity(MonitoringDomain domain){
+        List<StudentEntity> students = Collections.emptyList();
+        if (domain.getStudents() != null && !domain.getStudents().isEmpty()) {
+            students = domain.getStudents().stream()
+                    .map(registration -> StudentAdapter.toEntity(studentAdapter.findByRegistration(registration)))
+                    .toList();
+        }
+
         return MonitoringEntity.builder()
+                .id(domain.getId())
                 .name(domain.getName())
                 .teacher(TeacherAdapter.toEntity(teacherAdapter.findByRegistration(domain.getTeacher())))
                 .allowMonitorsSameTime(domain.getAllowMonitorsSameTime())
+                .students(students)
                 .build();
     }
 
@@ -81,6 +102,7 @@ public class MonitoringAdapter implements MonitoringGateway {
                 .name(entity.getName())
                 .allowMonitorsSameTime(entity.getAllowMonitorsSameTime())
                 .teacher(entity.getTeacher().getRegistration())
+                .students(entity.getStudents().stream().map(UserEntity::getRegistration).toList())
                 .schedules(entity.getSchedules().stream().map(this::toScheduleDomain).toList())
                 .build();
     }

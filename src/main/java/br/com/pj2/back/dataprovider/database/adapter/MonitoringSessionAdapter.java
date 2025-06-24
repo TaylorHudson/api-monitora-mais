@@ -5,6 +5,7 @@ import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.MonitoringSessionGateway;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringEntity;
+import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringSessionEntity;
 import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
@@ -27,6 +28,7 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
                         .id(domain.getId())
                         .monitor(StudentEntity.builder().registration(domain.getMonitor()).build())
                         .monitoring(MonitoringEntity.builder().id(discipline.getId()).build())
+                        .monitoringSchedule(MonitoringScheduleEntity.builder().id(domain.getMonitoringSchedule()).build())
                         .startTime(domain.getStartTime())
                         .endTime(domain.getEndTime())
                         .description(domain.getDescription())
@@ -39,7 +41,7 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
     @Override
     public MonitoringSessionDomain findByMonitorAndIsStartedTrue(String monitorRegistration) {
         var entity = monitoringSessionRepository.findByMonitorRegistrationAndIsStartedTrue(monitorRegistration)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_SESSION_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.NO_STARTED_MONITORING_SESSION_WAS_FOUND));
         return toDomain(entity);
     }
 
@@ -48,6 +50,7 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
                 .id(entity.getId())
                 .monitor(entity.getMonitor().getRegistration())
                 .monitoring(entity.getMonitoring().getName())
+                .monitoringSchedule(entity.getMonitoringSchedule().getId())
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .description(entity.getDescription())

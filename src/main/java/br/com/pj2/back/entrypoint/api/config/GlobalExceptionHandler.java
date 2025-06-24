@@ -1,10 +1,7 @@
 package br.com.pj2.back.entrypoint.api.config;
 
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
-import br.com.pj2.back.core.exception.ConflictException;
-import br.com.pj2.back.core.exception.ResourceNotFoundException;
-import br.com.pj2.back.core.exception.StandardException;
-import br.com.pj2.back.core.exception.UnauthorizedException;
+import br.com.pj2.back.core.exception.*;
 import br.com.pj2.back.entrypoint.api.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +30,18 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), ErrorCode.VALIDATION_ERROR, errorDetails);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(BadRequestException exception) {
+        log.error("BadRequest Error - [{}]", exception.getErrorCode().getMessage());
+
+        if (exception.getErrorDetails() != null && !exception.getErrorDetails().isEmpty()) {
+            return ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), exception.getErrorCode(), exception.getErrorDetails());
+        }
+
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), exception.getErrorCode());
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(ResourceNotFoundException exception) {
@@ -45,6 +54,13 @@ public class GlobalExceptionHandler {
     public ErrorResponse handle(UnauthorizedException exception) {
         log.error("Unauthorized Error - [{}]", exception.getErrorCode().getMessage());
         return ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), exception.getErrorCode());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handle(ForbiddenException exception) {
+        log.error("Forbidden Error - [{}]", exception.getErrorCode().getMessage());
+        return ErrorResponse.of(HttpStatus.FORBIDDEN.value(), exception.getErrorCode());
     }
 
     @ExceptionHandler(JwtException.class)

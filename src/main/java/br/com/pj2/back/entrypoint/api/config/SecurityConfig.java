@@ -4,6 +4,7 @@ import br.com.pj2.back.core.domain.enumerated.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,8 +34,23 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth ->
                         auth
+                                // Public Routes
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/monitoring/schedules**").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs.yaml").permitAll()
+
+                                // Teacher Routes
+                                .requestMatchers(HttpMethod.GET, "/monitoring/schedules/filter**").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.PATCH,"/monitoring/schedules/{id}/approve").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.PATCH,"/monitoring/schedules/{id}/deny").hasAnyRole(Role.TEACHER.name())
+
+                                // Student Routes
+                                .requestMatchers(HttpMethod.POST, "/monitoring/schedules").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers(HttpMethod.GET, "/monitoring/schedules/me").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers(HttpMethod.GET, "/monitoring/schedules/{id}").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/monitoring/sessions/started").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/monitoring/sessions/start").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/monitoring/sessions/finish").hasAnyRole(Role.STUDENT.name())
+
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
