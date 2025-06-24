@@ -31,6 +31,42 @@ public class MonitoringAdapter implements MonitoringGateway {
         return toDomain(monitoringRepository.save(toEntity(domain)));
     }
 
+    @Override
+    public List<MonitoringDomain> findAll(String registration) {
+        return monitoringRepository.findAll()
+                .stream()
+                .filter(monitoringEntity ->
+                        monitoringEntity.getTeacher() != null &&
+                                monitoringEntity.getTeacher().getRegistration().equals(registration))
+                .map(this::toDomain).toList();
+    }
+
+    @Override
+    public void deleteById(Long id, String registration){
+        MonitoringEntity monitoring = monitoringRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
+
+        if(!monitoring.getTeacher().getRegistration().equals(registration)){
+            throw new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND);
+        }
+        monitoringRepository.deleteById(id);
+    }
+
+    @Override
+    public MonitoringDomain update(Long id, MonitoringDomain domain, String registration) {
+        MonitoringEntity entity = toEntity(findByName(domain.getName()));
+        entity = toEntity(domain);
+        return toDomain(monitoringRepository.save(entity));
+    }
+
+    @Override
+    public MonitoringDomain findById(Long id) {
+        return monitoringRepository.findById(id)
+                .map(this::toDomain)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
+    }
+
+
     public MonitoringEntity toEntity(MonitoringDomain domain){
         return MonitoringEntity.builder()
                 .name(domain.getName())
