@@ -18,6 +18,7 @@ public class MonitoringDomain {
     private List<String> students;
     private List<MonitoringScheduleDomain> schedules;
     private List<MonitoringSessionDomain> sessions;
+    private List<String> topics;
 
     public void subscribeStudent(String studentRegistration) {
         if (students == null) {

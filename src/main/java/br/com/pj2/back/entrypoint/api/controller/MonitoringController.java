@@ -4,25 +4,23 @@ import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.CreateMonitoringUseCase;
+import br.com.pj2.back.core.usecase.DeleteByIdMonitoringUseCase;
+import br.com.pj2.back.core.usecase.FindAllMonitoringUseCase;
+import br.com.pj2.back.core.usecase.FindByIdMonitoring;
 import br.com.pj2.back.core.usecase.SubscribeStudentUseCase;
+import br.com.pj2.back.core.usecase.UpdateMonitoringUseCase;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
+import br.com.pj2.back.entrypoint.api.dto.request.MonitoringUpdateRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
 import br.com.pj2.back.entrypoint.api.dto.response.MonitoringResponse;
 import br.com.pj2.back.entrypoint.api.dto.response.MyMonitoringResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import br.com.pj2.back.core.usecase.DeleteByIdMonitoringUseCase;
-import br.com.pj2.back.core.usecase.FindAllMonitoringUseCase;
-import br.com.pj2.back.core.usecase.FindByIdMonitoring;
-import br.com.pj2.back.core.usecase.UpdateMonitoringUseCase;
-import br.com.pj2.back.entrypoint.api.dto.MonitoringRequest;
-import br.com.pj2.back.entrypoint.api.dto.MonitoringResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Tag(name = "Monitoria", description = "Gerenciamento de monitorias")
-import java.util.List;
-
 @RestController
 @RequestMapping("/monitoring")
 @RequiredArgsConstructor
@@ -96,27 +92,31 @@ public class MonitoringController {
                 .anyMatch(schedule -> registration.equals(schedule.getMonitor()));
     }
 
-    @GetMapping
+    @Operation(summary = "Buscar todas as monitorias do professor")
+    @GetMapping("/teacher")
     @ResponseStatus(HttpStatus.OK)
     public List<MonitoringResponse> findAll(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws BindException{
         return findAllMonitoringUseCase.execute(authorizationHeader).stream().map(MonitoringResponse::of).toList();
     }
 
+    @Operation(summary = "Deletar uma monitoria")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws BindException {
         deleteByIdMonitoringUseCase.execute(id, authorizationHeader);
     }
 
+    @Operation(summary = "Atualizar uma monitoria")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MonitoringResponse update(
             @PathVariable Long id,
-            @RequestBody @Valid MonitoringRequest request,
+            @RequestBody @Valid MonitoringUpdateRequest request,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws BindException {
         return MonitoringResponse.of(updateMonitoringUseCase.execute(id, request, authorizationHeader));
     }
 
+    @Operation(summary = "Buscar uma monitoria")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MonitoringResponse findById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) throws BindException{

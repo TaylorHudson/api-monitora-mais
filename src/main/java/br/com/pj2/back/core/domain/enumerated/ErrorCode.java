@@ -29,6 +29,9 @@ public enum ErrorCode {
     MONITORING_SESSION_CANNOT_BE_FINISHED("ERROR_403", "A sessão de monitoria não foi iniciada, então não pode ser finalizada."),
     // Forbidden errors - 500...599
     DO_NOT_HAVE_PERMISSION_TO_APPROVE("ERROR_500", "Você não tem permissão para aprovar o agendamento de monitoria."),
+    DO_NOT_HAVE_TO_UPDATE_THIS_MONITORING("ERROR_500","Você não tem permissão para atualizar essa Monitoria."),
+    DO_NOT_HAVE_PERMISSION_TO_DELETE_THIS_MONITORING("ERROR_500", "Você não tem permissão para deletar essa monitoria."),
+    DO_NOT_HAVE_PERMISSION_TO_ACCESS_THE_MONITORING("ERROR_500", "Você não tem permissão para buscar essa monitoria"),
     // Server errors - 900...999
     SERVER_ERROR("ERROR_999", "Não foi possível processar sua requisição.");
 

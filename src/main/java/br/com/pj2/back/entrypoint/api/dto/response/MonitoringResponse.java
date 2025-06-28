@@ -22,6 +22,7 @@ public class MonitoringResponse {
     private Boolean allowMonitorsSameTime;
     private String teacher;
     private List<MonitoringScheduleDomain> schedules;
+    private List<String> topics;
 
     public static MonitoringResponse of(MonitoringDomain domain){
         return MonitoringResponse.builder()
@@ -30,6 +31,7 @@ public class MonitoringResponse {
                 .allowMonitorsSameTime(domain.getAllowMonitorsSameTime())
                 .name(domain.getName())
                 .schedules(domain.getSchedules())
+                .topics(domain.getTopics())
                 .build();
     }
 }

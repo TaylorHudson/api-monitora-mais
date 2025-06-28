@@ -8,8 +8,8 @@ public interface MonitoringGateway {
     MonitoringDomain findByName(String name);
     MonitoringDomain create(MonitoringDomain domain);
     List<MonitoringDomain> findAllByStudentRegistration(String registration);
-    List<MonitoringDomain> findAll(String registration);
+    List<MonitoringDomain> findAllByTeacherRegistration(String registration);
     void deleteById(Long id, String registration);
     MonitoringDomain update(Long id, MonitoringDomain domain, String registration);
-    MonitoringDomain findById(Long id);
+    MonitoringDomain findById(Long id, String registration);
 }

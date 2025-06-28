@@ -17,6 +17,6 @@ public class FindAllMonitoringUseCase {
 
     public List<MonitoringDomain> execute(String authorizationHeader){
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        return monitoringGateway.findAll(registration);
+        return monitoringGateway.findAllByTeacherRegistration(registration);
     }
 }

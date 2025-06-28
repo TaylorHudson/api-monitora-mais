@@ -26,6 +26,7 @@ public class CreateMonitoringUseCase {
                         .teacher(registration)
                         .schedules(List.of())
                         .sessions(List.of())
+                        .topics(request.getTopics())
                         .build());
     }
 }

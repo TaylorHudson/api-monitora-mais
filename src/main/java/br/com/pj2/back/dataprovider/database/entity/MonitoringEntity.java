@@ -25,6 +25,9 @@ public class MonitoringEntity {
     @Column(name = "allow_monitors_same_time", nullable = false)
     private Boolean allowMonitorsSameTime;
 
+    @Column(name = "topics", nullable = true)
+    private String topics;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "teacher_registration", referencedColumnName = "registration")
     private TeacherEntity teacher;

@@ -14,7 +14,8 @@ public class FindByIdMonitoring {
     private final TokenGateway tokenGateway;
 
     public MonitoringDomain execute(Long id, String authorization){
-        return monitoringGateway.findById(id);
+        String registration = tokenGateway.extractSubject(authorization);
+        return monitoringGateway.findById(id, registration);
     }
 
 }

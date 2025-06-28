@@ -42,6 +42,12 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/monitoring/schedules/filter**").hasAnyRole(Role.TEACHER.name())
                                 .requestMatchers(HttpMethod.PATCH,"/monitoring/schedules/{id}/approve").hasAnyRole(Role.TEACHER.name())
                                 .requestMatchers(HttpMethod.PATCH,"/monitoring/schedules/{id}/deny").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.POST, "/monitoring").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.PUT, "/monitoring/{id}").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.GET, "/monitoring/teacher").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.GET, "/monitoring/{id}").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.DELETE, "/monitoring/{id}").hasAnyRole(Role.TEACHER.name())
+
 
                                 // Student Routes
                                 .requestMatchers(HttpMethod.POST, "/monitoring/schedules").hasAnyRole(Role.STUDENT.name())
