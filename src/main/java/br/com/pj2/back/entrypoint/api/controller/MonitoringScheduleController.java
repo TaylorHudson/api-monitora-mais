@@ -39,8 +39,8 @@ public class MonitoringScheduleController {
     private final MonitoringScheduleGateway scheduleGateway;
     private final CheckScheduleConflictsUseCase checkScheduleConflictsUseCase;
 
-    @Operation(summary = "Aprovar agendamento de monitoria")
-    @PatchMapping("/{id}/approve")
+    @Operation(summary = "Permite que um professor aprove um agendamento de monitoria")
+    @PatchMapping("/teachers/{id}/approve")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void approveSchedule(
             @PathVariable Long id,
@@ -49,8 +49,8 @@ public class MonitoringScheduleController {
         approveMonitoringScheduleUseCase.execute(authorizationHeader, id);
     }
 
-    @Operation(summary = "Negar agendamento de monitoria")
-    @PatchMapping("/{id}/deny")
+    @Operation(summary = "Permite que um professor negue um agendamento de monitoria")
+    @PatchMapping("/teachers/{id}/deny")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void denySchedule(
             @PathVariable Long id,
@@ -59,8 +59,8 @@ public class MonitoringScheduleController {
         denyMonitoringScheduleUseCase.execute(authorizationHeader, id);
     }
 
-    @Operation(summary = "Buscar agendamentos de monitoria por status")
-    @GetMapping("/filter")
+    @Operation(summary = "Buscar agendamentos de monitoria que o professor está relacionado por status")
+    @GetMapping("/teachers/filter")
     @ResponseStatus(HttpStatus.OK)
     public List<MonitoringScheduleResponse> findSchedulesByFilter(
             @Parameter(
@@ -77,8 +77,8 @@ public class MonitoringScheduleController {
                 .toList();
     }
 
-    @Operation(summary = "Solicitar agendamento de monitoria")
-    @PostMapping
+    @Operation(summary = "Permite que um aluno solicite um agendamento de monitoria")
+    @PostMapping("/students")
     @ResponseStatus(HttpStatus.CREATED)
     public MonitoringScheduleResponse requestSchedule(
             @RequestBody @Valid MonitoringScheduleRequest request,
@@ -100,8 +100,8 @@ public class MonitoringScheduleController {
         return MonitoringScheduleResponse.of(newSchedule);
     }
 
-    @Operation(summary = "Buscar meus agendamentos de monitoria")
-    @GetMapping("/me")
+    @Operation(summary = "Buscar agendamentos de monitoria do aluno")
+    @GetMapping("/students/me")
     @ResponseStatus(HttpStatus.OK)
     public List<MonitoringScheduleResponse> mySchedulesByDate(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -119,8 +119,8 @@ public class MonitoringScheduleController {
                 .toList();
     }
 
-    @Operation(summary = "Buscar agendamento de monitoria por ID")
-    @GetMapping("/{id}")
+    @Operation(summary = "Buscar agendamento de monitoria por ID do aluno")
+    @GetMapping("/students/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MonitoringScheduleResponse findScheduleById(
             @PathVariable Long id,

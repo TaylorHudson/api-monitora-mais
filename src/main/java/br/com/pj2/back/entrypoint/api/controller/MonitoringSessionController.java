@@ -25,8 +25,8 @@ public class MonitoringSessionController {
      private final FinishMonitoringSessionUseCase finishSessionUseCase;
      private final FindStartedMonitoringSessionUseCase findStartedMonitoringSessionUseCase;
 
-    @Operation(summary = "Buscar a sessão de monitoria iniciada")
-    @GetMapping("/started")
+    @Operation(summary = "Buscar a sessão de monitoria iniciada do aluno")
+    @GetMapping("/students/started")
     @ResponseStatus(HttpStatus.OK)
     public MonitoringSessionStartedResponse findStartedSession(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
@@ -35,8 +35,8 @@ public class MonitoringSessionController {
         return findStartedMonitoringSessionUseCase.execute(registration);
     }
 
-    @Operation(summary = "Iniciar uma sessão de monitoria")
-    @PostMapping("/start")
+    @Operation(summary = "Permite que um aluno inicie uma sessão de monitoria")
+    @PostMapping("/students/start")
     @ResponseStatus(HttpStatus.CREATED)
     public void startSession(
             @RequestBody @Valid StartMonitoringSessionRequest request,
@@ -46,8 +46,8 @@ public class MonitoringSessionController {
         startSessionUseCase.execute(request.getMonitoringScheduleId(), registration);
     }
 
-    @Operation(summary = "Finalizar uma sessão de monitoria")
-    @PostMapping("/finish")
+    @Operation(summary = "Permite que um aluno finalize uma sessão de monitoria")
+    @PostMapping("/students/finish")
     @ResponseStatus(HttpStatus.CREATED)
     public void finishSession(
             @RequestBody @Valid FinishMonitoringSessionRequest request,

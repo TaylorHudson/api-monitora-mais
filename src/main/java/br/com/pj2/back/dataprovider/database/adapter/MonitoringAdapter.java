@@ -169,6 +169,8 @@ public class MonitoringAdapter implements MonitoringGateway {
                 .dayOfWeek(entity.getDayOfWeek())
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
+                .status(entity.getStatus())
+                .requestedAt(entity.getRequestedAt())
                 .build();
     }
 }
