@@ -1,9 +1,15 @@
 ALTER TABLE users
-ADD COLUMN IF NOT EXISTS weekly_workload INTEGER;
-ADD COLUMN IF NOT EXISTS missing_weekly_workload INTEGER;
+ADD weekly_workload INTEGER,
+ADD missing_weekly_workload INTEGER;
 
-INSERT INTO users (registration, name, email, role, user_type, weekly_workload, missing_weekly_workload)
-VALUES
-  ('0000000', '', '', 'TEACHER', 'TEACHER', NULL),
-  ('1111111', '', '', 'TEACHER', 'TEACHER', NULL),
-  ('202315020036', '', '', 'STUDENT', 'STUDENT', 10, 10);
+DELETE FROM monitoring_schedules;
+
+UPDATE users
+SET weekly_workload = NULL,
+    missing_weekly_workload = NULL
+WHERE user_type = 'TEACHER';
+
+UPDATE users
+SET weekly_workload = 10,
+    missing_weekly_workload = 10
+WHERE user_type = 'STUDENT';

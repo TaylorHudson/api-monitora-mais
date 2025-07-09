@@ -1,6 +1,7 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
 import br.com.pj2.back.core.usecase.FindMissingWorkloadUseCase;
+import br.com.pj2.back.entrypoint.api.dto.response.MissingWorkloadResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,9 @@ public class WeeklyWorkloadController {
     @Operation(summary = "Buscar carga horária semanal faltante de um aluno")
     @GetMapping("/missing")
     @ResponseStatus(HttpStatus.OK)
-    public void missingWeeklyWorkload(
+    public MissingWorkloadResponse missingWeeklyWorkload(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
-        findMissingWorkloadUseCase.execute(authorizationHeader);
+        return new MissingWorkloadResponse(findMissingWorkloadUseCase.execute(authorizationHeader));
     }
 }
