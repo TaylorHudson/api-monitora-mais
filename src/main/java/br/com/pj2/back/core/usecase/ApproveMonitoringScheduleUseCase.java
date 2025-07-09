@@ -14,6 +14,7 @@ public class ApproveMonitoringScheduleUseCase {
     private final TokenGateway tokenGateway;
     private final MonitoringScheduleGateway monitoringScheduleGateway;
     private final MonitoringGateway monitoringGateway;
+    private final SubtractMissingWorkloadUseCase subtractMissingWorkloadUseCase;
 
     public void execute(String authorizationHeader, Long scheduleId) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
@@ -24,7 +25,11 @@ public class ApproveMonitoringScheduleUseCase {
             throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_APPROVE);
         }
 
-        schedule.approve();
-        monitoringScheduleGateway.save(schedule);
+        boolean approved = schedule.approve();
+
+        if (approved) {
+            subtractMissingWorkloadUseCase.execute(schedule);
+            monitoringScheduleGateway.save(schedule);
+        }
     }
 }

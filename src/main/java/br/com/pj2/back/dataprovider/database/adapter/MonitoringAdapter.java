@@ -37,7 +37,8 @@ public class MonitoringAdapter implements MonitoringGateway {
 
     @Override
     public MonitoringDomain create(MonitoringDomain domain) {
-        return toDomain(monitoringRepository.save(toEntity(domain)));
+        var entity = toEntity(domain);
+        return toDomain(monitoringRepository.save(entity));
     }
 
     @Override
@@ -146,6 +147,8 @@ public class MonitoringAdapter implements MonitoringGateway {
                 .teacher(TeacherAdapter.toEntity(teacherAdapter.findByRegistration(domain.getTeacher())))
                 .allowMonitorsSameTime(domain.getAllowMonitorsSameTime())
                 .students(students)
+                .schedules(new ArrayList<>())
+                .topics(convertListToString(domain.getTopics()))
                 .build();
     }
 

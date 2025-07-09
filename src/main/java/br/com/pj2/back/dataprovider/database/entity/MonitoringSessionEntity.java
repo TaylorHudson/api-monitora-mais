@@ -36,7 +36,7 @@ public class MonitoringSessionEntity {
     private LocalDateTime endTime;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String topics;
 
     @Column(name = "is_started", nullable = false)
     private boolean isStarted;

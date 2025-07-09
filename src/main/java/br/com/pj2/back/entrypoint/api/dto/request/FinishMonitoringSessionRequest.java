@@ -3,6 +3,8 @@ package br.com.pj2.back.entrypoint.api.dto.request;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,5 +13,5 @@ import lombok.*;
 public class FinishMonitoringSessionRequest {
     @NotNull(message = "O id da monitoria agendada é obrigatório.")
     private Long monitoringScheduleId;
-    private String description;
+    private List<String> topics;
 }

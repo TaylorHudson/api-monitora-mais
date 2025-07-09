@@ -54,7 +54,7 @@ public class MonitoringSessionController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        finishSessionUseCase.execute(request.getMonitoringScheduleId(), request.getDescription(), registration);
+        finishSessionUseCase.execute(request.getMonitoringScheduleId(), request.getTopics(), registration);
     }
 
 }

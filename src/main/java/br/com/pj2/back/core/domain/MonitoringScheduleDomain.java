@@ -22,11 +22,19 @@ public class MonitoringScheduleDomain {
     private MonitoringScheduleStatus status;
     private LocalDateTime requestedAt;
 
-    public void approve() {
-        this.status = MonitoringScheduleStatus.APPROVED;
+    public boolean approve() {
+        if (this.status == MonitoringScheduleStatus.PENDING) {
+            this.status = MonitoringScheduleStatus.APPROVED;
+            return true;
+        }
+        return false;
     }
 
-    public void deny() {
-        this.status = MonitoringScheduleStatus.DENIED;
+    public boolean deny() {
+        if (this.status == MonitoringScheduleStatus.PENDING) {
+            this.status = MonitoringScheduleStatus.DENIED;
+            return true;
+        }
+        return false;
     }
 }

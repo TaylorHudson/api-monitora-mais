@@ -13,16 +13,27 @@ import br.com.pj2.back.dataprovider.database.repository.MonitoringSessionReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MonitoringSessionAdapter implements MonitoringSessionGateway {
     private final MonitoringSessionRepository monitoringSessionRepository;
     private final MonitoringRepository monitoringRepository;
 
+    private static String convertToStringTopics(List<String> topics) {
+        return String.join(",", topics);
+    }
+
+    private static List<String> convertToListTopics(String topics) {
+        return List.of(topics.split(","));
+    }
+
     @Override
     public MonitoringSessionDomain save(MonitoringSessionDomain domain) {
         var discipline = monitoringRepository.findByName(domain.getMonitoring())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
+        var topics = domain.getTopics() != null && !domain.getTopics().isEmpty() ? convertToStringTopics(domain.getTopics()): "";
         var entity = monitoringSessionRepository.save(
                 MonitoringSessionEntity.builder()
                         .id(domain.getId())
@@ -31,7 +42,7 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
                         .monitoringSchedule(MonitoringScheduleEntity.builder().id(domain.getMonitoringSchedule()).build())
                         .startTime(domain.getStartTime())
                         .endTime(domain.getEndTime())
-                        .description(domain.getDescription())
+                        .topics(topics)
                         .isStarted(domain.isStarted())
                         .build()
         );
@@ -53,7 +64,7 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
                 .monitoringSchedule(entity.getMonitoringSchedule().getId())
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
-                .description(entity.getDescription())
+                .topics(convertToListTopics(entity.getTopics()))
                 .isStarted(entity.isStarted())
                 .build();
     }

@@ -8,17 +8,19 @@ import br.com.pj2.back.core.gateway.MonitoringSessionGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class FinishMonitoringSessionUseCase {
     private final MonitoringSessionGateway sessionGateway;
     private final MonitoringScheduleGateway scheduleGateway;
 
-    public void execute(Long monitoringScheduleId, String description, String registration) {
+    public void execute(Long monitoringScheduleId, List<String> topics, String registration) {
         var schedule = scheduleGateway.findByIdAndMonitorRegistration(monitoringScheduleId, registration);
         try {
             var session = sessionGateway.findByMonitorAndIsStartedTrue(schedule.getMonitor());
-            session.finishSession(description);
+            session.finishSession(topics);
             sessionGateway.save(session);
         } catch (ResourceNotFoundException e) {
             throw new ConflictException(ErrorCode.MONITORING_SESSION_CANNOT_BE_FINISHED);

@@ -24,7 +24,10 @@ public class DenyMonitoringScheduleUseCase {
             throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_APPROVE);
         }
 
-        schedule.deny();
-        monitoringScheduleGateway.save(schedule);
+        boolean denied = schedule.deny();
+
+        if (denied) {
+            monitoringScheduleGateway.save(schedule);
+        }
     }
 }

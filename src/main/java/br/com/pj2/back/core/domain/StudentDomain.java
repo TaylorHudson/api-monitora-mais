@@ -15,4 +15,8 @@ public class StudentDomain {
     private Role role;
     private int weeklyWorkload;
     private int missingWeeklyWorkload;
+
+    public void subtractMissingWorkload(int durationInMinutes) {
+        this.missingWeeklyWorkload -= durationInMinutes;
+    }
 }

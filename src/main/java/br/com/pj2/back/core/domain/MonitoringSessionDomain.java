@@ -3,6 +3,7 @@ package br.com.pj2.back.core.domain;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,7 +17,7 @@ public class MonitoringSessionDomain {
     private Long monitoringSchedule;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String description;
+    private List<String> topics;
     private boolean isStarted;
 
     public MonitoringSessionDomain(String monitor, String monitoring, Long monitoringSchedule) {
@@ -30,11 +31,9 @@ public class MonitoringSessionDomain {
         this.isStarted = true;
     }
 
-    public void finishSession(String description) {
+    public void finishSession(List<String> topics) {
         this.endTime = LocalDateTime.now();
         this.isStarted = false;
-        if (description == null || description.isBlank()) {
-            this.description = "Nenhum comentário adicionado pelo monitor.";
-        }
+        this.topics = topics;
     }
 }
