@@ -1,5 +1,6 @@
 package br.com.pj2.back.dataprovider.database.entity;
 
+import br.com.pj2.back.core.common.constants.Constants;
 import br.com.pj2.back.core.domain.enumerated.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,4 +21,8 @@ public class StudentEntity extends UserEntity {
     private Role role = Role.STUDENT;
     @ManyToMany(mappedBy = "students")
     private List<MonitoringEntity> monitorings;
+    @Builder.Default
+    private int weeklyWorkload = Constants.WEEKLY_WORKLOAD;
+    @Builder.Default
+    private int missingWeeklyWorkload = Constants.WEEKLY_WORKLOAD;
 }

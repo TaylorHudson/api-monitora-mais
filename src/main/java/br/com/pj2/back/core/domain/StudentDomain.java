@@ -13,8 +13,6 @@ public class StudentDomain {
     private String name;
     private String email;
     private Role role;
-//  private Set<PointDomain> points = new HashSet<>();
-//  private Set<MonitoringTimeDomain> monitoringTimes = new HashSet<>();
-//  private Set<TimeRequestDomain> timeRequests = new HashSet<>();
-//  private Set<MonitoringDomain> monitorings = new HashSet<>();
+    private int weeklyWorkload;
+    private int missingWeeklyWorkload;
 }

@@ -41,6 +41,8 @@ public class StudentAdapter implements StudentGateway {
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .role(entity.getRole())
+                .weeklyWorkload(entity.getWeeklyWorkload())
+                .missingWeeklyWorkload(entity.getMissingWeeklyWorkload())
                 .build();
     }
 
@@ -49,6 +51,8 @@ public class StudentAdapter implements StudentGateway {
                 .registration(domain.getRegistration())
                 .name(domain.getName())
                 .email(domain.getEmail())
+                .weeklyWorkload(domain.getWeeklyWorkload())
+                .missingWeeklyWorkload(domain.getMissingWeeklyWorkload())
                 .build();
     }
 }
