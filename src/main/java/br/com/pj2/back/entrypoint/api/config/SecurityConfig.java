@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 .requestMatchers("/monitoring/sessions/started").hasAnyRole(Role.STUDENT.name())
                                 .requestMatchers("/monitoring/sessions/start").hasAnyRole(Role.STUDENT.name())
                                 .requestMatchers("/monitoring/sessions/finish").hasAnyRole(Role.STUDENT.name())
+                                .requestMatchers("/pdf/month-workloads").hasAnyRole(Role.STUDENT.name())
 
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
