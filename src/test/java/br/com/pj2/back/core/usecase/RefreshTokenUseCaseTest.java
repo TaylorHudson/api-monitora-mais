@@ -17,10 +17,10 @@ class RefreshTokenUseCaseTest {
     @Mock
     private TokenGateway tokenGateway;
     @InjectMocks
-    private RefreshTokenUseCase useCase;
+    private RefreshTokenUseCase refreshTokenUseCase;
 
     @Test
-    void shouldGenerateNewAccessTokenWhenRefreshTokenIsValid() {
+    void shouldReturnNewAccessTokenWhenRefreshTokenIsValid() {
         String refreshToken = "valid-refresh-token";
         String subject = "user123";
         String newAccessToken = "new-access-token";
@@ -30,23 +30,22 @@ class RefreshTokenUseCaseTest {
         when(tokenGateway.isTokenValid(refreshToken, subject)).thenReturn(true);
         when(tokenGateway.generateAccessToken(subject)).thenReturn(newAccessToken);
 
-        AuthDomain result = useCase.execute(refreshToken);
+        AuthDomain result = refreshTokenUseCase.execute(refreshToken);
 
         assertEquals(newAccessToken, result.getAccessToken());
         assertNull(result.getRefreshToken());
     }
 
     @Test
-    void shouldThrowExceptionWhenTokenIsActuallyAnAccessToken() {
+    void shouldThrowUnauthorizedExceptionWhenTokenIsAccessToken() {
         String accessToken = "access-token";
-
         when(tokenGateway.isAccessToken(accessToken)).thenReturn(true);
 
-        assertThrows(UnauthorizedException.class, () -> useCase.execute(accessToken));
+        assertThrows(UnauthorizedException.class, () -> refreshTokenUseCase.execute(accessToken));
     }
 
     @Test
-    void shouldThrowExceptionWhenRefreshTokenIsInvalid() {
+    void shouldThrowUnauthorizedExceptionWhenRefreshTokenIsInvalid() {
         String refreshToken = "invalid-refresh-token";
         String subject = "user123";
 
@@ -54,6 +53,15 @@ class RefreshTokenUseCaseTest {
         when(tokenGateway.extractSubject(refreshToken)).thenReturn(subject);
         when(tokenGateway.isTokenValid(refreshToken, subject)).thenReturn(false);
 
-        assertThrows(UnauthorizedException.class, () -> useCase.execute(refreshToken));
+        assertThrows(UnauthorizedException.class, () -> refreshTokenUseCase.execute(refreshToken));
+    }
+
+    @Test
+    void shouldThrowUnauthorizedExceptionWhenExceptionOccursDuringTokenValidation() {
+        String refreshToken = "exception-token";
+        when(tokenGateway.isAccessToken(refreshToken)).thenReturn(false);
+        when(tokenGateway.extractSubject(refreshToken)).thenThrow(new RuntimeException("Unexpected error"));
+
+        assertThrows(UnauthorizedException.class, () -> refreshTokenUseCase.execute(refreshToken));
     }
 }

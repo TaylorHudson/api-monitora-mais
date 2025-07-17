@@ -57,8 +57,9 @@ public class AuthUseCaseTest {
         String password = "senha";
         String expectedAccess = "access-token";
         String expectedRefresh = "refresh-token";
+        var studentDomain = StudentDomain.builder().registration(registration).name(name).role(Role.STUDENT).build();
 
-        when(studentGateway.findByRegistrationAndRole(registration, Role.STUDENT)).thenReturn(new StudentDomain(registration, name, "", Role.STUDENT));
+        when(studentGateway.findByRegistrationAndRole(registration, Role.STUDENT)).thenReturn(studentDomain);
         when(tokenGateway.generateAccessToken(registration)).thenReturn(expectedAccess);
         when(tokenGateway.generateRefreshToken(registration)).thenReturn(expectedRefresh);
 
