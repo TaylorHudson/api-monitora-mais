@@ -46,7 +46,7 @@ class CheckScheduleConflictsUseCaseTest {
     }
 
     @Test
-    void shouldPassWhenNoConflictExists() throws Exception {
+    void shouldPassWhenNoConflictExists() {
         when(monitoringGateway.findByName(request.getMonitoring())).thenReturn(monitoringDomain);
         when(scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(any(), any(), any(), any())).thenReturn(false);
 
@@ -62,7 +62,7 @@ class CheckScheduleConflictsUseCaseTest {
     }
 
     @Test
-    void shouldPassWhenMonitoringAllowsMonitorsSameTime() throws Exception {
+    void shouldPassWhenMonitoringAllowsMonitorsSameTime() {
         monitoringDomain.setAllowMonitorsSameTime(true);
         when(monitoringGateway.findByName(request.getMonitoring())).thenReturn(monitoringDomain);
 
