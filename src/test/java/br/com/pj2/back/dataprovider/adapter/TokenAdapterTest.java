@@ -26,6 +26,24 @@ class TokenAdapterTest {
     }
 
     @Test
+    void shouldExtractSubjectFromAuthorization() {
+        String subject = "user123";
+        String token = tokenAdapter.generateAccessToken(subject);
+
+        String authHeader = "Bearer " + token;
+        String extractedSubject = tokenAdapter.extractSubjectFromAuthorization(authHeader);
+
+        assertEquals(subject, extractedSubject);
+    }
+
+    @Test
+    void shouldThrowExceptionForInvalidAuthorizationHeader() {
+        String invalidAuthHeader = "InvalidHeader";
+
+        assertThrows(RuntimeException.class, () -> tokenAdapter.extractSubjectFromAuthorization(invalidAuthHeader));
+    }
+
+    @Test
     void shouldGenerateAndValidateAccessToken() {
         String subject = "user123";
         String accessToken = tokenAdapter.generateAccessToken(subject);

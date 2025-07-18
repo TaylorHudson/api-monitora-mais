@@ -13,5 +13,4 @@ public class TeacherDomain {
     private String name;
     private String email;
     private Role role;
-    // private Set<DisciplineDomain> disciplines = new HashSet<>();
 }
