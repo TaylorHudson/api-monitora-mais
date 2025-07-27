@@ -27,6 +27,7 @@ public class MonitoringAdapter implements MonitoringGateway {
     private final MonitoringRepository monitoringRepository;
     private final TeacherAdapter teacherAdapter;
     private final StudentAdapter studentAdapter;
+    private final MonitoringSessionAdapter monitoringSessionAdapter;
 
     @Override
     public MonitoringDomain findByName(String name) {
@@ -51,9 +52,17 @@ public class MonitoringAdapter implements MonitoringGateway {
 
     @Override
     public List<MonitoringDomain> findAllByTeacherRegistration(String registration) {
-        return monitoringRepository.findAllByTeacherRegistration(registration)
+        List<MonitoringDomain> list = monitoringRepository.findAllByTeacherRegistration(registration)
                 .stream()
                 .map(this::toDomain).toList();
+        if(list.isEmpty()){
+            return list;
+        }
+        list.forEach(monitoring -> {
+            monitoring.setCountTopicsInSession(monitoringSessionAdapter.countTopicsInSessionMonitoring(monitoring));
+        });
+
+        return list;
     }
 
     @Override

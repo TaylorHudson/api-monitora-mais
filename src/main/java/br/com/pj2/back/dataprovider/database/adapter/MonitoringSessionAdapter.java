@@ -1,5 +1,6 @@
 package br.com.pj2.back.dataprovider.database.adapter;
 
+import br.com.pj2.back.core.domain.MonitoringDomain;
 import br.com.pj2.back.core.domain.MonitoringSessionDomain;
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import br.com.pj2.back.dataprovider.database.repository.MonitoringSessionReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -68,4 +70,54 @@ public class MonitoringSessionAdapter implements MonitoringSessionGateway {
                 .isStarted(entity.isStarted())
                 .build();
     }
+
+    public HashMap<String, Integer> countTopicsInSessionMonitoring(MonitoringDomain monitoring){
+        HashMap<String, Integer> topicsCount = new HashMap<>();
+
+        // Recuperar lista de sessões de monitoria que foram finalizadas com tópicos.
+        List<MonitoringSessionEntity> monitoringSessions = monitoringSessionRepository.findAll()
+                .stream()
+                .filter(session -> session.getTopics() != null && session.getMonitoring().getId().equals(monitoring.getId()))
+                .toList();
+
+        List<String> topics = monitoring.getTopics();
+
+        if(monitoringSessions.isEmpty()){
+            for(String topic : topics){
+                topicsCount.put(topic, 0);
+            }
+            return topicsCount;
+        }
+
+        StringBuilder sessionTopics = new StringBuilder();
+
+        for(MonitoringSessionEntity session: monitoringSessions){
+            sessionTopics.append(session.getTopics());
+            sessionTopics.append(",");
+        }
+
+        for(String topic : topics){
+            topicsCount.put(topic,countString(topic, sessionTopics.toString()));
+        }
+        return topicsCount;
+
+    }
+
+    private int countString(String word, String topics) {
+        if (word == null || topics == null || topics.isBlank()) {
+            return 0;
+        }
+
+        String[] topicArray = topics.split(",");
+        int count = 0;
+
+        for (String t : topicArray) {
+            if (t.trim().equalsIgnoreCase(word.trim())) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
 }

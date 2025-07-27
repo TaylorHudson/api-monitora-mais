@@ -3,6 +3,7 @@ package br.com.pj2.back.core.domain;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,7 @@ public class MonitoringDomain {
     private List<MonitoringScheduleDomain> schedules;
     private List<MonitoringSessionDomain> sessions;
     private List<String> topics;
+    private HashMap<String, Integer> countTopicsInSession;
 
     public void subscribeStudent(String studentRegistration) {
         if (students == null) {
