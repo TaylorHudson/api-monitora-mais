@@ -8,13 +8,10 @@ import br.com.pj2.back.dataprovider.client.SuapClient;
 import br.com.pj2.back.dataprovider.client.dto.AuthRequest;
 import br.com.pj2.back.dataprovider.client.dto.AuthResponse;
 import br.com.pj2.back.dataprovider.client.dto.FindStudentResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class AuthAdapter implements AuthGateway {
     private final SuapClient suapClient;
 
@@ -23,6 +20,12 @@ public class AuthAdapter implements AuthGateway {
 
     @Value("${integration.suap.key}")
     private String key;
+
+    public AuthAdapter(SuapClient suapClient, String credential, String key) {
+        this.suapClient = suapClient;
+        this.credential = credential;
+        this.key = key;
+    }
 
     @Override
     public void validateCredentials(String registration, String password) {

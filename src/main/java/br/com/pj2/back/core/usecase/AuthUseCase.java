@@ -20,14 +20,14 @@ public class AuthUseCase {
     private final TokenGateway tokenGateway;
 
     public AuthDomain execute(String registration, String password) {
-//        authGateway.validateCredentials(registration, password);
+        authGateway.validateCredentials(registration, password);
 
         if (RegexUtils.isTeacherRegistration(registration)) {
             teacherGateway.save(TeacherDomain.builder().registration(registration).build());
             return generateAuthDomain(registration);
         }
 
-        final var student =  studentGateway.findByRegistrationAndRole(registration, Role.STUDENT);
+        final var student = studentGateway.findByRegistrationAndRole(registration, Role.STUDENT);
         return generateAuthDomain(student.getRegistration());
     }
 

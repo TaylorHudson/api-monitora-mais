@@ -1,6 +1,6 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
-import br.com.pj2.back.core.usecase.PdfGenaratorUseCase;
+import br.com.pj2.back.core.usecase.PdfGeneratorUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,12 @@ import java.nio.file.Files;
 @RequiredArgsConstructor
 public class PdfController {
 
-    private final PdfGenaratorUseCase pdfGenaratorUseCase;
+    private final PdfGeneratorUseCase pdfGeneratorUseCase;
 
     @Operation(summary = "Baixar PDF com carga horaria mensal")
     @PostMapping
-    public ResponseEntity<byte[]> generateMonthlyTimeLoadPdf( @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        File pdf = pdfGenaratorUseCase.execute(authorizationHeader);
+    public ResponseEntity<byte[]> generateMonthlyTimeLoadPdf(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        File pdf = pdfGeneratorUseCase.execute(authorizationHeader);
         try {
             byte[] content = Files.readAllBytes(pdf.toPath());
             return ResponseEntity.ok()
