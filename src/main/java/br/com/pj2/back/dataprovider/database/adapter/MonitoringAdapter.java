@@ -69,10 +69,10 @@ public class MonitoringAdapter implements MonitoringGateway {
     public void deleteById(Long id, String registration){
         var monitoring = monitoringRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
 
-        if(monitoring.getTeacher().getRegistration().equalsIgnoreCase(registration)){
-            monitoringRepository.deleteById(id);
+        if(!monitoring.getTeacher().getRegistration().equalsIgnoreCase(registration)){
+            throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_DELETE_THIS_MONITORING);
         }
-        throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_DELETE_THIS_MONITORING);
+        monitoringRepository.deleteById(id);
     }
 
     @Override
