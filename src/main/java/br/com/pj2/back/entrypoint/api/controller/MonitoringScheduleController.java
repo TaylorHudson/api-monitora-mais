@@ -2,6 +2,7 @@ package br.com.pj2.back.entrypoint.api.controller;
 
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
+import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
 import br.com.pj2.back.core.gateway.MonitoringSessionGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Agendamento de Monitoria", description = "Gerenciamento de agendamentos de monitoria")
@@ -38,7 +40,7 @@ public class MonitoringScheduleController {
     private final DenyMonitoringScheduleUseCase denyMonitoringScheduleUseCase;
     private final TokenGateway tokenGateway;
     private final MonitoringScheduleGateway scheduleGateway;
-    private final MonitoringSessionGateway sessionGateway;
+    private final MonitoringGateway monitoringGateway;
     private final CheckScheduleConflictsUseCase checkScheduleConflictsUseCase;
 
     @Operation(summary = "Permite que um professor aprove um agendamento de monitoria")
@@ -113,13 +115,15 @@ public class MonitoringScheduleController {
             date = LocalDate.now();
         }
 
+        var responses = new ArrayList<MonitoringScheduleResponse>();
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        var session = sessionGateway.findByMonitorAndIsStartedTrue(registration);
         var schedules = scheduleGateway.findByMonitorRegistrationAndDayOfWeek(registration, date.getDayOfWeek());
 
-        return schedules.stream()
-                .map(schedule -> MonitoringScheduleResponse.of(schedule, session.getTopics()))
-                .toList();
+        for (MonitoringScheduleDomain schedule : schedules) {
+            var monitoring = monitoringGateway.findByName(schedule.getMonitoring());
+            responses.add(MonitoringScheduleResponse.of(schedule, monitoring.getTopics()));
+        }
+        return responses;
     }
 
     @Operation(summary = "Buscar agendamento de monitoria por ID do aluno")
