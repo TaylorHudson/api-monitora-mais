@@ -3,6 +3,7 @@ package br.com.pj2.back.entrypoint.api.controller;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
+import br.com.pj2.back.core.gateway.MonitoringSessionGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.ApproveMonitoringScheduleUseCase;
 import br.com.pj2.back.core.usecase.CheckScheduleConflictsUseCase;
@@ -37,6 +38,7 @@ public class MonitoringScheduleController {
     private final DenyMonitoringScheduleUseCase denyMonitoringScheduleUseCase;
     private final TokenGateway tokenGateway;
     private final MonitoringScheduleGateway scheduleGateway;
+    private final MonitoringSessionGateway sessionGateway;
     private final CheckScheduleConflictsUseCase checkScheduleConflictsUseCase;
 
     @Operation(summary = "Permite que um professor aprove um agendamento de monitoria")
@@ -112,10 +114,11 @@ public class MonitoringScheduleController {
         }
 
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
+        var session = sessionGateway.findByMonitorAndIsStartedTrue(registration);
         var schedules = scheduleGateway.findByMonitorRegistrationAndDayOfWeek(registration, date.getDayOfWeek());
 
         return schedules.stream()
-                .map(MonitoringScheduleResponse::of)
+                .map(schedule -> MonitoringScheduleResponse.of(schedule, session.getTopics()))
                 .toList();
     }
 

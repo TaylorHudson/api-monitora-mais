@@ -14,14 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthAdapter implements AuthGateway {
     private final SuapClient suapClient;
+    private final String credential;
+    private final String key;
 
-    @Value("${integration.suap.credential}")
-    private String credential;
-
-    @Value("${integration.suap.key}")
-    private String key;
-
-    public AuthAdapter(SuapClient suapClient, String credential, String key) {
+    public AuthAdapter(SuapClient suapClient, @Value("${integration.suap.credential}") String credential, @Value("${integration.suap.key}") String key) {
         this.suapClient = suapClient;
         this.credential = credential;
         this.key = key;
