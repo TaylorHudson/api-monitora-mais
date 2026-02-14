@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MonitoringScheduleRepository extends JpaRepository<MonitoringScheduleEntity, Long> {
-    List<MonitoringScheduleEntity> findByMonitorRegistrationAndDayOfWeekAndStatus(String registration, DayOfWeek dayOfWeek, MonitoringScheduleStatus status);
+    List<MonitoringScheduleEntity> findByMonitorRegistrationAndStatus(String registration, MonitoringScheduleStatus status);
     Optional<MonitoringScheduleEntity> findByIdAndMonitorRegistrationAndStatus(Long id, String registration, MonitoringScheduleStatus status);
     @Query("""
     SELECT CASE WHEN COUNT(ms) > 0 THEN true ELSE false END

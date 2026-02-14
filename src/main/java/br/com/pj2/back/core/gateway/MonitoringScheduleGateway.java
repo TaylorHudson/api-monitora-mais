@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MonitoringScheduleGateway {
     List<MonitoringScheduleDomain> findByTeacherRegistrationAndStatus(String registration, MonitoringScheduleStatus status);
-    List<MonitoringScheduleDomain> findByMonitorRegistrationAndDayOfWeek(String registration, DayOfWeek dayOfWeek);
+    List<MonitoringScheduleDomain> findByMonitorRegistration(String registration);
     MonitoringScheduleDomain findByIdAndMonitorRegistration(Long id, String registration);
     MonitoringScheduleDomain findById(Long id);
     MonitoringScheduleDomain save(MonitoringScheduleDomain domain);
