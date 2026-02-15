@@ -87,8 +87,8 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     }
 
     @Override
-    public boolean existsByDayOfWeekAndTimeRangeAndStatusIn(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> statuses) {
-        return monitoringScheduleRepository.existsByDayOfWeekAndTimeRangeAndStatusIn(dayOfWeek, startTime, endTime, statuses);
+    public boolean existsByDayOfWeekAndTimeRangeAndStatusIn(Long monitoringId, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime, List<MonitoringScheduleStatus> statuses) {
+        return monitoringScheduleRepository.existsByDayOfWeekAndTimeRangeAndStatusIn(monitoringId, dayOfWeek, startTime, endTime, statuses);
     }
 
     private MonitoringScheduleDomain toDomain(MonitoringScheduleEntity entity) {

@@ -30,6 +30,7 @@ public class CheckScheduleConflictsUseCase {
         }
 
         boolean conflictExists = scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(
+                monitoring.getId(),
                 dayOfWeek,
                 request.getStartTime(),
                 request.getEndTime(),
