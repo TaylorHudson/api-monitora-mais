@@ -4,7 +4,6 @@ import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.MonitoringScheduleGateway;
-import br.com.pj2.back.core.gateway.MonitoringSessionGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.ApproveMonitoringScheduleUseCase;
 import br.com.pj2.back.core.usecase.CheckScheduleConflictsUseCase;
@@ -18,14 +17,12 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,17 +104,12 @@ public class MonitoringScheduleController {
     @Operation(summary = "Buscar agendamentos de monitoria do aluno")
     @GetMapping("/students/me")
     @ResponseStatus(HttpStatus.OK)
-    public List<MonitoringScheduleResponse> mySchedulesByDate(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+    public List<MonitoringScheduleResponse> mySchedules(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
-
         var responses = new ArrayList<MonitoringScheduleResponse>();
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        var schedules = scheduleGateway.findByMonitorRegistrationAndDayOfWeek(registration, date.getDayOfWeek());
+        var schedules = scheduleGateway.findByMonitorRegistration(registration);
 
         for (MonitoringScheduleDomain schedule : schedules) {
             var monitoring = monitoringGateway.findByName(schedule.getMonitoring());

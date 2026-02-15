@@ -9,10 +9,12 @@ import br.com.pj2.back.core.gateway.StudentGateway;
 import br.com.pj2.back.core.gateway.TeacherGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthUseCase {
     private final AuthGateway authGateway;
     private final TeacherGateway teacherGateway;
@@ -21,12 +23,15 @@ public class AuthUseCase {
 
     public AuthDomain execute(String registration, String password) {
         //authGateway.validateCredentials(registration, password);
+        log.info("[AuthUseCase] User credentials validated in SUAP");
 
         if (RegexUtils.isTeacherRegistration(registration)) {
+            log.info("[AuthUseCase] User is a teacher");
             teacherGateway.save(TeacherDomain.builder().registration(registration).build());
             return generateAuthDomain(registration);
         }
 
+        log.info("[AuthUseCase] User is a student, verifying if has permission to login");
         final var student = studentGateway.findByRegistrationAndRole(registration, Role.STUDENT);
         return generateAuthDomain(student.getRegistration());
     }
