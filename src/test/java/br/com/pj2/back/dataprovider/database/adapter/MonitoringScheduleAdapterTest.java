@@ -150,6 +150,7 @@ class MonitoringScheduleAdapterTest {
     @Test
     void shouldCheckIfExistsByDayOfWeekAndTimeRangeAndStatusIn() {
         when(monitoringScheduleRepository.existsByDayOfWeekAndTimeRangeAndStatusIn(
+                1L,
                 DayOfWeek.MONDAY,
                 LocalTime.of(14, 0),
                 LocalTime.of(15, 0),
@@ -157,6 +158,7 @@ class MonitoringScheduleAdapterTest {
         )).thenReturn(true);
 
         boolean exists = monitoringScheduleAdapter.existsByDayOfWeekAndTimeRangeAndStatusIn(
+                1L,
                 DayOfWeek.MONDAY,
                 LocalTime.of(14, 0),
                 LocalTime.of(15, 0),

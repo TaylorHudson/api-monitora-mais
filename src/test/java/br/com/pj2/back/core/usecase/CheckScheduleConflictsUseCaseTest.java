@@ -48,7 +48,7 @@ class CheckScheduleConflictsUseCaseTest {
     @Test
     void shouldPassWhenNoConflictExists() {
         when(monitoringGateway.findByName(request.getMonitoring())).thenReturn(monitoringDomain);
-        when(scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(any(), any(), any(), any())).thenReturn(false);
+        when(scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(any(), any(), any(), any(), any())).thenReturn(false);
 
         assertDoesNotThrow(() -> checkScheduleConflictsUseCase.execute(request));
     }
@@ -56,7 +56,7 @@ class CheckScheduleConflictsUseCaseTest {
     @Test
     void shouldThrowConflictExceptionWhenConflictExists() {
         when(monitoringGateway.findByName(request.getMonitoring())).thenReturn(monitoringDomain);
-        when(scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(any(), any(), any(), any())).thenReturn(true);
+        when(scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(any(), any(), any(), any(), any())).thenReturn(true);
 
         assertThrows(ConflictException.class, () -> checkScheduleConflictsUseCase.execute(request));
     }
