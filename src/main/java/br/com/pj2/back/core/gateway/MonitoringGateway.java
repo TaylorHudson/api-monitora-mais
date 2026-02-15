@@ -1,6 +1,7 @@
 package br.com.pj2.back.core.gateway;
 
 import br.com.pj2.back.core.domain.MonitoringDomain;
+import br.com.pj2.back.core.domain.MonitoringDomainDetail;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface MonitoringGateway {
     void deleteById(Long id, String registration);
     MonitoringDomain update(Long id, MonitoringDomain domain, String registration);
     MonitoringDomain findById(Long id, String registration);
+    MonitoringDomainDetail findByIdDetails(Long id, String registration);
 }

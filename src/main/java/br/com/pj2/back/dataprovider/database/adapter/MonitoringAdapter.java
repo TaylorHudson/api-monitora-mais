@@ -1,8 +1,11 @@
 package br.com.pj2.back.dataprovider.database.adapter;
 
 import br.com.pj2.back.core.domain.MonitoringDomain;
+import br.com.pj2.back.core.domain.MonitoringDomainDetail;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
+import br.com.pj2.back.core.domain.StudentMonitoringDomain;
 import br.com.pj2.back.core.domain.enumerated.ErrorCode;
+import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.exception.BadRequestException;
 import br.com.pj2.back.core.exception.ForbiddenException;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
@@ -83,6 +86,15 @@ public class MonitoringAdapter implements MonitoringGateway {
         }
         throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_ACCESS_THE_MONITORING);
     }
+    @Override
+    public MonitoringDomainDetail findByIdDetails(Long id, String registration) {
+        var monitoring = monitoringRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
+        if(monitoring.getTeacher().getRegistration().equalsIgnoreCase(registration)){
+            return toDomainDetail(monitoring);
+        }
+        throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_ACCESS_THE_MONITORING);
+    }
+
 
     @Override
     public MonitoringDomain update(Long id, MonitoringDomain domain, String registration) {
@@ -183,6 +195,35 @@ public class MonitoringAdapter implements MonitoringGateway {
                 .endTime(entity.getEndTime())
                 .status(entity.getStatus())
                 .requestedAt(entity.getRequestedAt())
+                .build();
+    }
+
+    private MonitoringDomainDetail toDomainDetail(MonitoringEntity entity) {
+
+        List<StudentMonitoringDomain> studentMonitoringDomains = new ArrayList<>();
+
+        for (StudentEntity studentEntity : entity.getStudents()) {
+            var student = StudentMonitoringDomain.of(studentEntity);
+            studentMonitoringDomains.add(student);
+        }
+
+        for (MonitoringScheduleEntity schedule : entity.getSchedules()) {
+            studentMonitoringDomains.stream()
+                    .filter(student -> student.getRegistration()
+                            .equals(schedule.getMonitor().getRegistration()))
+                    .findFirst()
+                    .ifPresent(student -> {
+                                if (MonitoringScheduleStatus.APPROVED.equals(schedule.getStatus())) {
+                                    student.getDaysOfWeek().add(String.valueOf(schedule.getDayOfWeek()));
+                                }
+                            }
+                    );
+        }
+        return MonitoringDomainDetail.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .teacher(entity.getTeacher().getName())
+                .students(studentMonitoringDomains)
                 .build();
     }
 }

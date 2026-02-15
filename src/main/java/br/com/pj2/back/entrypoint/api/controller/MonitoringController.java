@@ -1,5 +1,6 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
+import br.com.pj2.back.core.domain.MonitoringDomainDetail;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
@@ -7,11 +8,13 @@ import br.com.pj2.back.core.usecase.CreateMonitoringUseCase;
 import br.com.pj2.back.core.usecase.DeleteMonitoringByIdUseCase;
 import br.com.pj2.back.core.usecase.FindAllMonitoringUseCase;
 import br.com.pj2.back.core.usecase.FindMonitoringByIdUseCase;
+import br.com.pj2.back.core.usecase.FindMonitoringDetailsByIdUseCase;
 import br.com.pj2.back.core.usecase.SubscribeStudentUseCase;
 import br.com.pj2.back.core.usecase.UpdateMonitoringUseCase;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringUpdateRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
+import br.com.pj2.back.entrypoint.api.dto.response.MonitoringDetailsResponse;
 import br.com.pj2.back.entrypoint.api.dto.response.MonitoringResponse;
 import br.com.pj2.back.entrypoint.api.dto.response.MyMonitoringResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +51,7 @@ public class MonitoringController {
     private final DeleteMonitoringByIdUseCase deleteMonitoringByIdUseCase;
     private final UpdateMonitoringUseCase updateMonitoringUseCase;
     private final FindMonitoringByIdUseCase findMonitoringByIdUseCase;
+    private final FindMonitoringDetailsByIdUseCase findMonitoringDetailsByIdUseCase;
 
     @Operation(summary = "Permite que um professor crie uma nova monitoria")
     @PostMapping("/teachers")
@@ -91,6 +95,13 @@ public class MonitoringController {
     @ResponseStatus(HttpStatus.OK)
     public MonitoringResponse findById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         return MonitoringResponse.of(findMonitoringByIdUseCase.execute(id, authorization));
+    }
+
+    @Operation(summary = "Buscar detalhes de uma monitoria")
+    @GetMapping("/teachers/details/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MonitoringDetailsResponse findByIdMonitoringDetails(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        return MonitoringDetailsResponse.of(findMonitoringDetailsByIdUseCase.execute(id, authorization));
     }
 
     @Operation(summary = "Inscrever um aluno em uma monitoria")
