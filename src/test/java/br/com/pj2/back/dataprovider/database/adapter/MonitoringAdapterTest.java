@@ -1,12 +1,15 @@
 package br.com.pj2.back.dataprovider.database.adapter;
 
 import br.com.pj2.back.core.domain.MonitoringDomain;
+import br.com.pj2.back.core.domain.MonitoringDomainDetail;
 import br.com.pj2.back.core.domain.StudentDomain;
 import br.com.pj2.back.core.domain.TeacherDomain;
+import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.exception.ForbiddenException;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringEntity;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
+import br.com.pj2.back.dataprovider.database.entity.StudentEntity;
 import br.com.pj2.back.dataprovider.database.entity.TeacherEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import org.instancio.Instancio;
@@ -16,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.DayOfWeek;
 import java.util.*;
 
 import static org.instancio.Select.field;
@@ -247,4 +251,102 @@ class MonitoringAdapterTest {
         assertNull(MonitoringAdapter.convertListToString(Collections.emptyList()));
         assertEquals(Collections.emptyList(), MonitoringAdapter.convertStringToList(""));
     }
+
+    @Test
+    void shouldFindByIdDetailsSuccessfullyWhenTeacherMatches() {
+        StudentEntity studentEntity = Instancio.of(StudentEntity.class)
+                .set(field(StudentEntity::getRegistration), "S100")
+                .create();
+        TeacherEntity teacherEntity = TeacherEntity.builder()
+                .registration("T100")
+                .name("Teacher Name")
+                .build();
+        MonitoringScheduleEntity schedule = Instancio.of(MonitoringScheduleEntity.class)
+                .set(field(MonitoringScheduleEntity::getMonitor), studentEntity)
+                .set(field(MonitoringScheduleEntity::getStatus), MonitoringScheduleStatus.APPROVED)
+                .set(field(MonitoringScheduleEntity::getDayOfWeek), DayOfWeek.MONDAY)
+                .create();
+        MonitoringEntity entity = Instancio.of(MonitoringEntity.class)
+                .set(field(MonitoringEntity::getId), 100L)
+                .set(field(MonitoringEntity::getName), "Monitoring Test")
+                .set(field(MonitoringEntity::getTeacher), teacherEntity)
+                .set(field(MonitoringEntity::getStudents), List.of(studentEntity))
+                .set(field(MonitoringEntity::getSchedules), List.of(schedule))
+                .create();
+
+        when(monitoringRepository.findById(100L)).thenReturn(Optional.of(entity));
+        MonitoringDomainDetail result = monitoringAdapter.findByIdDetails(100L, "T100");
+
+        assertNotNull(result);
+        assertEquals(100L, result.getId());
+        assertEquals("Monitoring Test", result.getName());
+        assertEquals("Teacher Name", result.getTeacher());
+
+        assertEquals(1, result.getStudents().size());
+        assertEquals("S100", result.getStudents().get(0).getRegistration());
+        assertTrue(result.getStudents().get(0).getDaysOfWeek().contains("MONDAY"));
+    }
+
+    @Test
+    void shouldThrowForbiddenExceptionWhenTeacherDoesNotMatchInFindByIdDetails() {
+        TeacherEntity teacherEntity = TeacherEntity.builder()
+                .registration("T200")
+                .name("Teacher Name")
+                .build();
+        MonitoringEntity entity = Instancio.of(MonitoringEntity.class)
+                .set(field(MonitoringEntity::getId), 200L)
+                .set(field(MonitoringEntity::getTeacher), teacherEntity)
+                .create();
+
+        when(monitoringRepository.findById(200L)).thenReturn(Optional.of(entity));
+
+        assertThrows(
+                ForbiddenException.class,
+                () -> monitoringAdapter.findByIdDetails(200L, "T201")
+        );
+    }
+
+    @Test
+    void shouldThrowResourceNotFoundExceptionWhenMonitoringNotFoundInFindByIdDetails() {
+        when(monitoringRepository.findById(300L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> monitoringAdapter.findByIdDetails(300L, "T300")
+        );
+    }
+
+    @Test
+    void shouldNotAddDayOfWeekWhenScheduleNotApproved() {
+        StudentEntity studentEntity = Instancio.of(StudentEntity.class)
+                .set(field(StudentEntity::getRegistration), "S400")
+                .create();
+
+        TeacherEntity teacherEntity = TeacherEntity.builder()
+                .registration("T400")
+                .name("Teacher Name")
+                .build();
+
+        MonitoringScheduleEntity schedule = Instancio.of(MonitoringScheduleEntity.class)
+                .set(field(MonitoringScheduleEntity::getMonitor), studentEntity)
+                .set(field(MonitoringScheduleEntity::getStatus), MonitoringScheduleStatus.PENDING)
+                .set(field(MonitoringScheduleEntity::getDayOfWeek), DayOfWeek.FRIDAY)
+                .create();
+
+        MonitoringEntity entity = Instancio.of(MonitoringEntity.class)
+                .set(field(MonitoringEntity::getId), 400L)
+                .set(field(MonitoringEntity::getTeacher), teacherEntity)
+                .set(field(MonitoringEntity::getStudents), List.of(studentEntity))
+                .set(field(MonitoringEntity::getSchedules), List.of(schedule))
+                .create();
+
+        when(monitoringRepository.findById(400L)).thenReturn(Optional.of(entity));
+
+        MonitoringDomainDetail result = monitoringAdapter.findByIdDetails(400L, "T400");
+
+        assertNotNull(result);
+        assertEquals(1, result.getStudents().size());
+        assertTrue(result.getStudents().get(0).getDaysOfWeek().isEmpty());
+    }
+
 }

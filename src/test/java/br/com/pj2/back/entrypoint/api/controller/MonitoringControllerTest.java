@@ -1,9 +1,14 @@
 package br.com.pj2.back.entrypoint.api.controller;
 
 import br.com.pj2.back.core.domain.MonitoringDomain;
+import br.com.pj2.back.core.domain.MonitoringDomainDetail;
+import br.com.pj2.back.core.domain.enumerated.ErrorCode;
+import br.com.pj2.back.core.exception.ForbiddenException;
+import br.com.pj2.back.core.exception.ResourceNotFoundException;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
 import br.com.pj2.back.core.usecase.*;
+import br.com.pj2.back.entrypoint.api.config.GlobalExceptionHandler;
 import br.com.pj2.back.entrypoint.api.dto.request.LoginRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringUpdateRequest;
@@ -59,6 +64,8 @@ class MonitoringControllerTest {
     private FindMonitoringByIdUseCase findMonitoringByIdUseCase;
     @InjectMocks
     private MonitoringController monitoringController;
+    @Mock
+    private FindMonitoringDetailsByIdUseCase findMonitoringDetailsByIdUseCase;
 
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -178,5 +185,33 @@ class MonitoringControllerTest {
                     .andExpect(jsonPath("$[0].id").value(2))
                     .andExpect(jsonPath("$[0].name").value("Student Monitoring"));
         }
+
+    @Test
+    void shouldReturnMonitoringDetailsSuccessfully() throws Exception {
+        var detailDomain = Instancio.of(MonitoringDomainDetail.class)
+                .set(field(MonitoringDomainDetail::getId), 10L)
+                .set(field(MonitoringDomainDetail::getName), "Detailed Monitoring")
+                .set(field(MonitoringDomainDetail::getTeacher), "Teacher Name")
+                .set(field(MonitoringDomainDetail::getStudents), List.of())
+                .create();
+
+        when(findMonitoringDetailsByIdUseCase.execute(anyLong(), anyString()))
+                .thenReturn(detailDomain);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/monitoring/teachers/details/{id}", 10L)
+                        .header("Authorization", AUTH_HEADER))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(10))
+                .andExpect(jsonPath("$.name").value("Detailed Monitoring"))
+                .andExpect(jsonPath("$.teacher").value("Teacher Name"));
+    }
+
+    @Test
+    void shouldReturnUnauthorizedWhenAuthorizationHeaderMissingOnFindDetails() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/monitoring/teachers/details/{id}", 11L))
+                .andExpect(status().is4xxClientError());
+    }
 
 }
