@@ -29,7 +29,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     @Override
-    public void checkIfStudentExists(String registration) {
+    public FindStudentResponse.UserResponse checkIfStudentExists(String registration) {
         String decryptedData = AesUtils.decrypt(credential, key);
         String[] parts = decryptedData.split(":");
         AuthResponse authResponse = suapClient.obtainToken(new AuthRequest(parts[0], parts[1]));
@@ -47,5 +47,11 @@ public class AuthAdapter implements AuthGateway {
         if (!result.getSituation().equals("Matriculado")) {
             throw new BadRequestException(ErrorCode.INVALID_STUDENT_REGISTRATION);
         }
+
+        return studentResponse.getResults()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(ErrorCode.INVALID_STUDENT_REGISTRATION));
     }
+
 }

@@ -22,7 +22,7 @@ public class SubscribeStudentUseCase {
     private final AuthGateway authGateway;
 
     public void execute(SubscribeStudentRequest request, String authorizationHeader) {
-        authGateway.checkIfStudentExists(request.getStudentRegistration());
+        var response = authGateway.checkIfStudentExists(request.getStudentRegistration());
 
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
 
@@ -36,7 +36,8 @@ public class SubscribeStudentUseCase {
         }
 
         StudentDomain student = StudentDomain.builder()
-                .registration(request.getStudentRegistration())
+                .name(response.getName())
+                .registration(response.getRegistration())
                 .build();
         studentGateway.save(student);
 

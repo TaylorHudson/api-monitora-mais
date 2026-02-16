@@ -94,7 +94,7 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     private MonitoringScheduleDomain toDomain(MonitoringScheduleEntity entity) {
         return MonitoringScheduleDomain.builder()
                 .id(entity.getId())
-                .monitor(entity.getMonitor().getRegistration())
+                .monitor(entity.getMonitor().getName())
                 .monitoring(entity.getMonitoring().getName())
                 .dayOfWeek(entity.getDayOfWeek())
                 .startTime(entity.getStartTime())
