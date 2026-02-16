@@ -62,7 +62,7 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
                 ()-> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND)
         );
 
-        var student = studentRepository.findById(domain.getMonitor())
+        var student = studentRepository.findById(domain.getMonitorRegistration())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
         if (!monitoring.getStudents().contains(student)) {
@@ -94,6 +94,7 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     private MonitoringScheduleDomain toDomain(MonitoringScheduleEntity entity) {
         return MonitoringScheduleDomain.builder()
                 .id(entity.getId())
+                .monitorRegistration(entity.getMonitor().getRegistration())
                 .monitor(entity.getMonitor().getName())
                 .monitoring(entity.getMonitoring().getName())
                 .dayOfWeek(entity.getDayOfWeek())

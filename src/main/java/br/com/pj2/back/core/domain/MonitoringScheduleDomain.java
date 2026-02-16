@@ -14,6 +14,7 @@ import java.time.LocalTime;
 @Builder
 public class MonitoringScheduleDomain {
     private Long id;
+    private String monitorRegistration;
     private String monitor;
     private String monitoring;
     private DayOfWeek dayOfWeek;

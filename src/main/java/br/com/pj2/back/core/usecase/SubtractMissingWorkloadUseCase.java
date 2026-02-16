@@ -13,7 +13,7 @@ public class SubtractMissingWorkloadUseCase {
 
     public void execute(MonitoringScheduleDomain schedule) {
         var durationInMinutes = TimeUtils.durationInMinutes(schedule.getStartTime(), schedule.getEndTime());
-        var student = studentGateway.findByRegistration(schedule.getMonitor());
+        var student = studentGateway.findByRegistration(schedule.getMonitorRegistration());
         student.subtractMissingWorkload(durationInMinutes);
         studentGateway.save(student);
     }

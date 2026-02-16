@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class MonitoringScheduleResponse {
     private Long id;
+    private String monitorRegistration;
     private String monitor;
     private String discipline;
     private String dayOfWeek;
@@ -24,6 +25,7 @@ public class MonitoringScheduleResponse {
     public static MonitoringScheduleResponse of(MonitoringScheduleDomain domain, List<String> topics) {
         return MonitoringScheduleResponse.builder()
                 .id(domain.getId())
+                .monitorRegistration(domain.getMonitorRegistration())
                 .monitor(domain.getMonitor())
                 .discipline(domain.getMonitoring())
                 .dayOfWeek(domain.getDayOfWeek().name())
