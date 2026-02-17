@@ -89,7 +89,7 @@ public class MonitoringScheduleController {
         checkScheduleConflictsUseCase.execute(request);
         var newSchedule = scheduleGateway.save(
                 MonitoringScheduleDomain.builder()
-                        .monitor(registration)
+                        .monitorRegistration(registration)
                         .monitoring(request.getMonitoring())
                         .dayOfWeek(DayOfWeek.valueOf(request.getDayOfWeek().toUpperCase()))
                         .startTime(request.getStartTime())
