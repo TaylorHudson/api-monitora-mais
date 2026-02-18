@@ -22,9 +22,9 @@ public class StartMonitoringSessionUseCase {
         var schedule = scheduleGateway.findByIdAndMonitorRegistration(monitoringScheduleId, registration);
 
         checkIfSessionAlreadyStarted(schedule.getMonitor());
-        validateSessionStartTime(schedule);
+        //validateSessionStartTime(schedule);
 
-        var session = new MonitoringSessionDomain(schedule.getMonitor(), schedule.getMonitoring(), monitoringScheduleId);
+        var session = new MonitoringSessionDomain(schedule.getMonitorRegistration(), schedule.getMonitoring(), monitoringScheduleId);
         session.startSession();
         sessionGateway.save(session);
     }

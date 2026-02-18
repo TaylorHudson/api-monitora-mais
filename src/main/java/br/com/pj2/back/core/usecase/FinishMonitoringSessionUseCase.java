@@ -19,7 +19,7 @@ public class FinishMonitoringSessionUseCase {
     public void execute(Long monitoringScheduleId, List<String> topics, String registration) {
         var schedule = scheduleGateway.findByIdAndMonitorRegistration(monitoringScheduleId, registration);
         try {
-            var session = sessionGateway.findByMonitorAndIsStartedTrue(schedule.getMonitor());
+            var session = sessionGateway.findByMonitorAndIsStartedTrue(schedule.getMonitorRegistration());
             session.finishSession(topics);
             sessionGateway.save(session);
         } catch (ResourceNotFoundException e) {
