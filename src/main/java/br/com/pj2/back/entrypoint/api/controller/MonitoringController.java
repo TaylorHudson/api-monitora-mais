@@ -4,13 +4,7 @@ import br.com.pj2.back.core.domain.MonitoringDomainDetail;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
-import br.com.pj2.back.core.usecase.CreateMonitoringUseCase;
-import br.com.pj2.back.core.usecase.DeleteMonitoringByIdUseCase;
-import br.com.pj2.back.core.usecase.FindAllMonitoringUseCase;
-import br.com.pj2.back.core.usecase.FindMonitoringByIdUseCase;
-import br.com.pj2.back.core.usecase.FindMonitoringDetailsByIdUseCase;
-import br.com.pj2.back.core.usecase.SubscribeStudentUseCase;
-import br.com.pj2.back.core.usecase.UpdateMonitoringUseCase;
+import br.com.pj2.back.core.usecase.*;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringUpdateRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
@@ -52,6 +46,7 @@ public class MonitoringController {
     private final UpdateMonitoringUseCase updateMonitoringUseCase;
     private final FindMonitoringByIdUseCase findMonitoringByIdUseCase;
     private final FindMonitoringDetailsByIdUseCase findMonitoringDetailsByIdUseCase;
+    private final FindMonitoringDetailsUseCase findMonitoringDetailsUseCase;
 
     @Operation(summary = "Permite que um professor crie uma nova monitoria")
     @PostMapping("/teachers")
@@ -102,6 +97,17 @@ public class MonitoringController {
     @ResponseStatus(HttpStatus.OK)
     public MonitoringDetailsResponse findByIdMonitoringDetails(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         return MonitoringDetailsResponse.of(findMonitoringDetailsByIdUseCase.execute(id, authorization));
+    }
+
+    @Operation(summary = "Buscar detalhes de uma monitoria")
+    @GetMapping("/teachers/details")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MonitoringDetailsResponse> findMonitoringDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        List<MonitoringDomainDetail> domainDetails = findMonitoringDetailsUseCase.execute(authorization);
+        return domainDetails
+                .stream()
+                .map(MonitoringDetailsResponse::of)
+                .toList();
     }
 
     @Operation(summary = "Inscrever um aluno em uma monitoria")

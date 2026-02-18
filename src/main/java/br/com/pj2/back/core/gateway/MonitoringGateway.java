@@ -14,4 +14,5 @@ public interface MonitoringGateway {
     MonitoringDomain update(Long id, MonitoringDomain domain, String registration);
     MonitoringDomain findById(Long id, String registration);
     MonitoringDomainDetail findByIdDetails(Long id, String registration);
+    List<MonitoringDomainDetail> findDetails(String registration);
 }

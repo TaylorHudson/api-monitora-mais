@@ -86,6 +86,7 @@ public class MonitoringAdapter implements MonitoringGateway {
         }
         throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_ACCESS_THE_MONITORING);
     }
+
     @Override
     public MonitoringDomainDetail findByIdDetails(Long id, String registration) {
         var monitoring = monitoringRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorCode.MONITORING_NOT_FOUND));
@@ -95,6 +96,13 @@ public class MonitoringAdapter implements MonitoringGateway {
         throw new ForbiddenException(ErrorCode.DO_NOT_HAVE_PERMISSION_TO_ACCESS_THE_MONITORING);
     }
 
+    @Override
+    public List<MonitoringDomainDetail> findDetails(String registration) {
+        return monitoringRepository.findAllByTeacherRegistration(registration)
+                .stream()
+                .map(this::toDomainDetail)
+                .toList();
+    }
 
     @Override
     public MonitoringDomain update(Long id, MonitoringDomain domain, String registration) {
