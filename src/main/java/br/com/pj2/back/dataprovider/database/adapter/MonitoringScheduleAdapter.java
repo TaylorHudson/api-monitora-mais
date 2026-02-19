@@ -33,6 +33,14 @@ public class MonitoringScheduleAdapter implements MonitoringScheduleGateway {
     }
 
     @Override
+    public List<MonitoringScheduleDomain> findByTeacherRegistration(String registration) {
+        var entities = monitoringScheduleRepository.findByTeacherRegistration(registration);
+        return entities.stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
+    @Override
     public List<MonitoringScheduleDomain> findByMonitorRegistration(String registration) {
         var entities = monitoringScheduleRepository.findByMonitorRegistrationAndStatus(registration, MonitoringScheduleStatus.APPROVED);
         return entities.stream()

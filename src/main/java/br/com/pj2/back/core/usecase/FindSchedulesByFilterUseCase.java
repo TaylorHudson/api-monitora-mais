@@ -17,6 +17,11 @@ public class FindSchedulesByFilterUseCase {
 
     public List<MonitoringScheduleDomain> execute(String status, String authorizationHeader) {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
+
+        if (status == null || status.isBlank()) {
+            return monitoringScheduleGateway.findByTeacherRegistration(registration);
+        }
+
         return monitoringScheduleGateway.findByTeacherRegistrationAndStatus(registration, MonitoringScheduleStatus.fromString(status));
     }
 }

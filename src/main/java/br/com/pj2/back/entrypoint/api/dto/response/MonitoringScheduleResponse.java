@@ -3,6 +3,8 @@ package br.com.pj2.back.entrypoint.api.dto.response;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class MonitoringScheduleResponse {
     private LocalTime endTime;
     private String status;
     private List<String> topics;
+    private LocalDateTime requestedAt;
 
     public static MonitoringScheduleResponse of(MonitoringScheduleDomain domain, List<String> topics) {
         return MonitoringScheduleResponse.builder()
@@ -33,6 +36,7 @@ public class MonitoringScheduleResponse {
                 .endTime(domain.getEndTime())
                 .status(domain.getStatus().name())
                 .topics(topics.isEmpty() ? List.of() : topics)
+                .requestedAt(domain.getRequestedAt())
                 .build();
     }
 

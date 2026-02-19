@@ -41,4 +41,16 @@ public interface MonitoringScheduleRepository extends JpaRepository<MonitoringSc
             @Param("registration") String registration,
             @Param("status") String status
     );
+
+    @Query(value = """
+        SELECT *
+        FROM monitoring_schedules
+        WHERE monitoring_id IN (
+            SELECT id FROM monitoring WHERE teacher_registration = :registration
+        )
+        ORDER BY monitoring_schedules.requested_at DESC
+    """, nativeQuery = true)
+    List<MonitoringScheduleEntity> findByTeacherRegistration(
+            @Param("registration") String registration
+    );
 }

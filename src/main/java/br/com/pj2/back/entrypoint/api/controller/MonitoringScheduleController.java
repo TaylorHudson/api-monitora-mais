@@ -69,7 +69,7 @@ public class MonitoringScheduleController {
                     description = "Status do agendamento. Valores válidos: PENDING, APPROVED, DENIED.",
                     example = "APPROVED"
             )
-            @RequestParam(required = false, defaultValue = "PENDING") String status,
+            @RequestParam(required = false) String status,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         var schedules = findSchedulesByFilterUseCase.execute(status, authorizationHeader);
