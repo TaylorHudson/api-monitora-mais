@@ -63,7 +63,7 @@ public class AuthFilter extends OncePerRequestFilter {
             final var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (Exception ex) {
-            log.error("Error during process of authentication.", ex);
+            log.error("Error during process of authentication. {}", ex.getMessage());
         } finally {
             filterChain.doFilter(request, response);
         }

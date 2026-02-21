@@ -9,6 +9,7 @@ import br.com.pj2.back.core.domain.enumerated.MonitoringScheduleStatus;
 import br.com.pj2.back.core.exception.BadRequestException;
 import br.com.pj2.back.core.exception.ForbiddenException;
 import br.com.pj2.back.core.exception.ResourceNotFoundException;
+import br.com.pj2.back.core.exception.UnprocessableEntityException;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringEntity;
 import br.com.pj2.back.dataprovider.database.entity.MonitoringScheduleEntity;
@@ -17,6 +18,7 @@ import br.com.pj2.back.dataprovider.database.entity.TeacherEntity;
 import br.com.pj2.back.dataprovider.database.entity.UserEntity;
 import br.com.pj2.back.dataprovider.database.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,8 +43,12 @@ public class MonitoringAdapter implements MonitoringGateway {
 
     @Override
     public MonitoringDomain create(MonitoringDomain domain) {
-        var entity = toEntity(domain);
-        return toDomain(monitoringRepository.save(entity));
+        try {
+            var entity = toEntity(domain);
+            return toDomain(monitoringRepository.save(entity));
+        } catch (DataIntegrityViolationException e) {
+            throw new UnprocessableEntityException(ErrorCode.MONITORING_ALREADY_EXISTS);
+        }
     }
 
     @Override

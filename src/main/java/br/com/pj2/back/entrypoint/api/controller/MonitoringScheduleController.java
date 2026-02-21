@@ -86,7 +86,7 @@ public class MonitoringScheduleController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) throws BindException {
         String registration = tokenGateway.extractSubjectFromAuthorization(authorizationHeader);
-        checkScheduleConflictsUseCase.execute(request);
+        checkScheduleConflictsUseCase.execute(request, registration);
         var newSchedule = scheduleGateway.save(
                 MonitoringScheduleDomain.builder()
                         .monitorRegistration(registration)

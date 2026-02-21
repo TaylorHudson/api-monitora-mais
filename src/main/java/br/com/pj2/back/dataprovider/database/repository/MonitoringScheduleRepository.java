@@ -30,6 +30,24 @@ public interface MonitoringScheduleRepository extends JpaRepository<MonitoringSc
             @Param("statuses") List<MonitoringScheduleStatus> statuses
     );
 
+    @Query("""
+    SELECT CASE WHEN COUNT(ms) > 0 THEN true ELSE false END
+    FROM MonitoringScheduleEntity ms
+    WHERE ms.dayOfWeek = :dayOfWeek
+      AND ms.monitoring.id = :monitoringId
+      AND ms.startTime < :endTime
+      AND ms.endTime > :startTime
+      AND ms.status IN :statuses
+      AND ms.monitor.registration = :monitorRegistration""")
+    boolean existsByDayOfWeekAndTimeRangeAndStatusInAndMonitor(
+            @Param("monitoringId") Long monitoringId,
+            @Param("dayOfWeek") DayOfWeek dayOfWeek,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime,
+            @Param("statuses") List<MonitoringScheduleStatus> statuses,
+            @Param("monitorRegistration") String monitorRegistration
+    );
+
     @Query(value = """
         SELECT *
         FROM monitoring_schedules

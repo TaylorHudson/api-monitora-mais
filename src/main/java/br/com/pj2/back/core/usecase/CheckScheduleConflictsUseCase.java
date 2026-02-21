@@ -21,12 +21,23 @@ public class CheckScheduleConflictsUseCase {
     private final MonitoringScheduleGateway scheduleGateway;
     private final MonitoringGateway monitoringGateway;
 
-    public void execute(MonitoringScheduleRequest request) throws BindException {
+    public void execute(MonitoringScheduleRequest request, String registration) throws BindException {
         var dayOfWeek = parseDayOfWeek(request.getDayOfWeek());
         MonitoringDomain monitoring = monitoringGateway.findByName(request.getMonitoring());
 
         if (monitoring.getAllowMonitorsSameTime()) {
-            return;
+            boolean conflictExists = scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusInAndMonitor(
+                    monitoring.getId(),
+                    dayOfWeek,
+                    request.getStartTime(),
+                    request.getEndTime(),
+                    List.of(MonitoringScheduleStatus.PENDING, MonitoringScheduleStatus.APPROVED),
+                    registration
+            );
+
+            if (conflictExists) {
+                throw new ConflictException(ErrorCode.MONITORING_SCHEDULE_REQUEST_CONFLICT);
+            }
         }
 
         boolean conflictExists = scheduleGateway.existsByDayOfWeekAndTimeRangeAndStatusIn(

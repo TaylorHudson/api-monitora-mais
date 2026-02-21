@@ -42,6 +42,18 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), exception.getErrorCode());
     }
 
+    @ExceptionHandler(UnprocessableEntityException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(UnprocessableEntityException exception) {
+        log.error("Unprocessable entity Error - [{}]", exception.getErrorCode().getMessage());
+
+        if (exception.getErrorDetails() != null && !exception.getErrorDetails().isEmpty()) {
+            return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getErrorCode(), exception.getErrorDetails());
+        }
+
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getErrorCode());
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(ResourceNotFoundException exception) {
