@@ -15,4 +15,5 @@ public interface MonitoringRepository extends JpaRepository<MonitoringEntity, Lo
 
     @Query("SELECT m FROM MonitoringEntity m JOIN m.teacher s WHERE s.registration = :registration")
     List<MonitoringEntity> findAllByTeacherRegistration(@Param("registration") String registration);
+    Optional<MonitoringEntity> findByIdAndTeacherRegistration(Long id, String registration);
 }

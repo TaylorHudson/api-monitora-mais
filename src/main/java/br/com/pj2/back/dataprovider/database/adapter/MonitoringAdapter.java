@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -108,6 +109,22 @@ public class MonitoringAdapter implements MonitoringGateway {
                 .stream()
                 .map(this::toDomainDetail)
                 .toList();
+    }
+
+    @Override
+    public void deleteStudent(Long monitoringId, String studentRegistration, String teacherRegistration) {
+        MonitoringEntity monitoring = monitoringRepository
+                .findByIdAndTeacherRegistration(monitoringId, teacherRegistration)
+                .orElseThrow(() -> new UnprocessableEntityException(ErrorCode.MONITORING_NOT_FOUND));
+
+        boolean removed = monitoring.getStudents()
+                .removeIf(student -> student.getRegistration().equals(studentRegistration));
+
+        if (!removed) {
+            throw new UnprocessableEntityException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        monitoringRepository.save(monitoring);
     }
 
     @Override

@@ -4,7 +4,15 @@ import br.com.pj2.back.core.domain.MonitoringDomainDetail;
 import br.com.pj2.back.core.domain.MonitoringScheduleDomain;
 import br.com.pj2.back.core.gateway.MonitoringGateway;
 import br.com.pj2.back.core.gateway.TokenGateway;
-import br.com.pj2.back.core.usecase.*;
+import br.com.pj2.back.core.usecase.CreateMonitoringUseCase;
+import br.com.pj2.back.core.usecase.DeleteMonitorUseCase;
+import br.com.pj2.back.core.usecase.DeleteMonitoringByIdUseCase;
+import br.com.pj2.back.core.usecase.FindAllMonitoringUseCase;
+import br.com.pj2.back.core.usecase.FindMonitoringByIdUseCase;
+import br.com.pj2.back.core.usecase.FindMonitoringDetailsByIdUseCase;
+import br.com.pj2.back.core.usecase.FindMonitoringDetailsUseCase;
+import br.com.pj2.back.core.usecase.SubscribeStudentUseCase;
+import br.com.pj2.back.core.usecase.UpdateMonitoringUseCase;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.MonitoringUpdateRequest;
 import br.com.pj2.back.entrypoint.api.dto.request.SubscribeStudentRequest;
@@ -47,6 +55,7 @@ public class MonitoringController {
     private final FindMonitoringByIdUseCase findMonitoringByIdUseCase;
     private final FindMonitoringDetailsByIdUseCase findMonitoringDetailsByIdUseCase;
     private final FindMonitoringDetailsUseCase findMonitoringDetailsUseCase;
+    private final DeleteMonitorUseCase deleteMonitorUseCase;
 
     @Operation(summary = "Permite que um professor crie uma nova monitoria")
     @PostMapping("/teachers")
@@ -135,6 +144,13 @@ public class MonitoringController {
                         .alreadyRequested(hasStudentSchedule(monitoring.getSchedules(), registration))
                         .build())
                 .toList();
+    }
+
+    @Operation(summary = "Permite que o professor delete um monitor da monitoria")
+    @DeleteMapping("{monitoringId}/students/{studentRegistration}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteStudent(@PathVariable("monitoringId") Long monitoringId, @PathVariable("studentRegistration") String studentRegistration,@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+        deleteMonitorUseCase.execute(monitoringId, studentRegistration, authorizationHeader);
     }
 
     private boolean hasStudentSchedule(List<MonitoringScheduleDomain> schedules, String registration) {

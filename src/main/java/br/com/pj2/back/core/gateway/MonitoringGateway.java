@@ -15,4 +15,5 @@ public interface MonitoringGateway {
     MonitoringDomain findById(Long id, String registration);
     MonitoringDomainDetail findByIdDetails(Long id, String registration);
     List<MonitoringDomainDetail> findDetails(String registration);
+    void deleteStudent(Long monitoringId, String studentRegistration,String teacherRegistration);
 }

@@ -48,6 +48,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/monitoring/{id}").hasAnyRole(Role.TEACHER.name())
                                 .requestMatchers(HttpMethod.DELETE, "/monitoring/{id}").hasAnyRole(Role.TEACHER.name())
                                 .requestMatchers(HttpMethod.GET, "/monitoring/teacher/details").hasAnyRole(Role.TEACHER.name())
+                                .requestMatchers(HttpMethod.DELETE, "/monitoring/{monitoringId}/students/{studentRegistration}").hasAnyRole(Role.TEACHER.name())
+
 
 
                                 // Student Routes
