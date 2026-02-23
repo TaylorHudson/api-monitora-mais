@@ -20,8 +20,9 @@ public class UpdateMonitoringUseCase {
                 MonitoringDomain.builder()
                         .name(request.getName())
                         .allowMonitorsSameTime(request.getAllowMonitorsSameTime())
-                        .teacher(request.getTeacher())
-                        .topics(request.getTopics()).build()
-                        , registration);
+                        .topics(request.getTopics())
+                        .build()
+                        ,registration
+        );
     }
 }

@@ -133,10 +133,9 @@ public class MonitoringAdapter implements MonitoringGateway {
 
         if(entity.getTeacher().getRegistration().equalsIgnoreCase(registration)){
 
-            if ((domain.getTeacher() == null || domain.getTeacher().isBlank()) &&
-                            domain.getAllowMonitorsSameTime() == null &&
-                            (domain.getTopics() == null || domain.getTopics().isEmpty()) &&
-                            (domain.getName() == null || domain.getName().isBlank())) {
+            if (domain.getAllowMonitorsSameTime() == null &&
+               (domain.getTopics() == null || domain.getTopics().isEmpty()) &&
+               (domain.getName() == null || domain.getName().isBlank())) {
                 throw new BadRequestException(ErrorCode.VALIDATION_ERROR);
             }
 
@@ -148,15 +147,11 @@ public class MonitoringAdapter implements MonitoringGateway {
     }
 
     private MonitoringEntity buildMonitoringEntityUpdate(MonitoringDomain domain, MonitoringEntity entity, String topics) {
-        TeacherEntity updatedTeacher = getUpdatedString(domain.getTeacher(), null) != null
-                ? TeacherAdapter.toEntity(teacherAdapter.findByRegistration(domain.getTeacher()))
-                : entity.getTeacher();
-
         return MonitoringEntity.builder()
                 .id(entity.getId())
+                .teacher(entity.getTeacher())
                 .name(getUpdatedString(domain.getName(), entity.getName()))
                 .allowMonitorsSameTime(getUpdatedValue(domain.getAllowMonitorsSameTime(), entity.getAllowMonitorsSameTime()))
-                .teacher(updatedTeacher)
                 .students(entity.getStudents())
                 .sessions(entity.getSessions())
                 .schedules(entity.getSchedules())

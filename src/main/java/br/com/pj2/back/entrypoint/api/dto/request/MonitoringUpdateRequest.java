@@ -19,7 +19,5 @@ public class MonitoringUpdateRequest {
 
     private Boolean allowMonitorsSameTime;
 
-    private String teacher;
-
     private List<String> topics;
 }
